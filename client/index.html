@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap-theme.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/letters_100.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <title>WordCraft Multiplayers</title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <!-- Button to open the collapsed navbar item -->
+            <button type="button" class="navbar-toggle"
+              data-toggle="collapse" data-target="#colapseBar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand">
+              WordCraft Multiplayer
+            </span>
+          </div> <!-- Navigation bar Header -->
+          <div class="collapse navbar-collapse" id="colapseBar">
+            <ul class="nav navbar-nav navbar-right">
+              <li id="navHome">
+                <a href="#">
+                  <span class="glyphicon glyphicon-home"></span>
+                  Home
+                </a>
+              </li>
+              <li id="navLink1">
+                <a href="#>" >
+                  <span class="glyphicon glyphicon-bookmark"></span>
+                  Link 1
+                </a>
+              </li>
+              <li id="navLink2">
+                <a href="#>">
+                  <span class="glyphicon glyphicon-file"></span>
+                  Link 2
+                </a>
+              </li>
+              <!-- Spacer -->
+              <li>&nbsp;&nbsp;&nbsp;</li>
+            </ul> <!-- Navigation bar right -->
+          </div>
+        </div> <!-- Container Fluid -->
+      </nav> <!-- Navigation bar -->
+    </header>
+
+    <main>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h4 class="pannel-title">Game Board</h4>
+              </div>
+              <div class="panel-body gameboard">
+                <div class="row">
+                  <div class="letters text-center">
+                    <!-- Place to put the server render letters here -->
+                    <span class="tile wcA"></span>
+                    <span class="tile wcB"></span>
+                    <span class="tile wcC"></span>
+                    <span class="tile wcD"></span>
+                    <span class="tile wcE"></span>
+                    <span class="tile wcF"></span>
+                    <span class="tile wcG"></span>
+                  </div>  <!-- End of letters DIV -->
+
+                  <div class="timers text-center">
+                    <!-- Place to put the server render Timer here -->
+                    <!-- Below are example count down timer -->
+                    <h3> Get Ready for Count Down </h3>
+                    <span class="countdown wc5"></span>
+
+                  </div> <!-- End of Timers DIV -->
+                </div>
+              </div>
+              <div class="panel-footer text-center">
+                <!-- This is where the user can type in there input -->
+                <input class="form-control">
+              </div>
+            </div>
+
+          </div> <!-- End Game board column -->
+
+          <!-- Right column to hold chat and player list-->
+          <div class="col-sm-3 col-md-3 col-lg-3">
+            <!-- Begin row to hold the game room -->
+            <div class="row">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h4 class="pannel-title">Players</h4>
+                </div>
+                <div class="panel-body players-body">
+                  <!-- Player dynamically get added in here via Knockout Binding -->
+                  <ul id="playerList">
+                    <li>Player 1</li>
+                    <li>Player 2</li>
+                    <li class="self">Player 3</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- End row to hold the game room -->
+            <!-- Begin row to hold the chatroom -->
+            <div class="row">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h4 class="pannel-title">Chat Room</h4>
+                </div>
+                <div class="panel-body chatroom-body"></div>
+                <div class="panel-footer">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="chatInput">
+                    <span class="input-group-btn">
+                      <button class="btn" id="sendChat">Send</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End row that contain chatroom -->
+          </div> <!-- Right column -->
+        </div> <!-- Grid Row -->
+      </div> <!-- Container -->
+    </main>
+
+    <section id="modal-anchor">
+      <!-- Dynamically attached modal and remove it here -->
+      <!-- Location to store code for modal -->
+    </section>
+
+    <!-- List of all the javascript libraries -->
+    <script src="/lib/jquery/jquery-2.2.2.min.js" charset="utf-8"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="/lib/lodash/lodash.js" charset="utf-8"></script>
+    <script src="/lib/knockout/knockout-3.4.0.js" charset="utf-8"></script>
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    <script src="/js/wordcraft.js" charset="utf-8"></script>
+  </body>
+</html>
