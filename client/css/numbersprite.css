@@ -1,0 +1,38 @@
+
+/* Wordcraft Large Countdown Timer */
+.number-lg {
+    width: 125px;
+    height: 175px;
+    background-image:url("/assets/NumberSprite_125_175.png");
+    display:inline-block;
+}
+
+.wc-lg-0 { background-position:       0 0 }
+.wc-lg-1 { background-position:  -125px 0 }
+.wc-lg-2 { background-position:  -250px 0 }
+.wc-lg-3 { background-position:  -375px 0 }
+.wc-lg-4 { background-position:  -500px 0 }
+.wc-lg-5 { background-position:  -625px 0 }
+.wc-lg-6 { background-position:  -750px 0 }
+.wc-lg-7 { background-position:  -875px 0 }
+.wc-lg-8 { background-position: -1000px 0 }
+.wc-lg-9 { background-position: -1125px 0 }
+
+/* Wordcraft Timer number sprite */
+.number-sm {
+    width: 20px;
+    height: 28px;
+    background-image:url("/assets/NumberSprite_20_28.png");
+    display:inline-block;
+}
+
+.wc-sm-0 { background-position:      0 0 }
+.wc-sm-1 { background-position:  -20px 0 }
+.wc-sm-2 { background-position:  -40px 0 }
+.wc-sm-3 { background-position:  -60px 0 }
+.wc-sm-4 { background-position:  -80px 0 }
+.wc-sm-5 { background-position: -100px 0 }
+.wc-sm-6 { background-position: -120px 0 }
+.wc-sm-7 { background-position: -140px 0 }
+.wc-sm-8 { background-position: -160px 0 }
+.wc-sm-9 { background-position: -180px 0 }

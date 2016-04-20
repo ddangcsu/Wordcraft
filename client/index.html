@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap-theme.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/letters_100.css" type="text/css">
-    <link rel="stylesheet" href="/css/numbers_125.css" type="text/css">
+    <link rel="stylesheet" href="/css/lettersprite.css" type="text/css">
+    <link rel="stylesheet" href="/css/numbersprite.css" type="text/css">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 
     <title>WordCraft Multiplayers</title>
@@ -62,27 +62,33 @@
           <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
             <div class="panel panel-info">
               <div class="panel-heading">
-                <h4 class="pannel-title">Game Board</h4>
+                <h2 class="pannel-title">Game Board
+                <span class="text-center pull-right">
+                  <span class="number-sm wc-sm-4"></span>
+                  <span class="number-sm wc-sm-0"></span>
+                </span>
+                </h2>
               </div>
               <div class="panel-body gameboard">
                 <div class="row">
                   <div class="letters text-center">
                     <!-- Place to put the server render letters here -->
-                    <span class="tile wcA"></span>
-                    <span class="tile wcB"></span>
-                    <span class="tile wcC"></span>
-                    <span class="tile wcD"></span>
-                    <span class="tile wcE"></span>
-                    <span class="tile wcF"></span>
-                    <span class="tile wcG"></span>
+                    <span class="letter-lg wc-lg-A"></span>
+                    <span class="letter-lg wc-lg-B"></span>
+                    <span class="letter-lg wc-lg-C"></span>
+                    <span class="letter-lg wc-lg-D"></span>
+                    <span class="letter-lg wc-lg-E"></span>
+                    <span class="letter-lg wc-lg-F"></span>
+                    <span class="letter-lg wc-lg-G"></span>
                   </div>  <!-- End of letters DIV -->
 
                   <div class="timers text-center">
                     <!-- Place to put the server render Timer here -->
                     <!-- Below are example count down timer -->
                     <h3> Get Ready for Count Down </h3>
-                    <span class="countdown wc5"></span>
-                    <span class="countdown wc4"></span>
+                    <span class="number-lg wc-lg-5"></span>
+                    <span class="number-lg wc-lg-5"></span>
+
                   </div> <!-- End of Timers DIV -->
                 </div>
               </div>

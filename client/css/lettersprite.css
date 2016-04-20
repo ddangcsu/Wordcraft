@@ -1,0 +1,38 @@
+/* Image sprite for the letter from
+http://www.itbrigadeinc.com/post/2012/09/09/CSS-Sprites-Best-Example-Ever!.aspx
+*/
+
+/* Wordcraft Large letters tile */
+.letter-lg {
+    width: 112px;
+    height: 100px;
+    background-image:url("/assets/LetterSprite_100.png");
+    display:inline-block;
+}
+
+.wc-lg-A { background-position:       0 0 }
+.wc-lg-B { background-position:  -112px 0 }
+.wc-lg-C { background-position:  -224px 0 }
+.wc-lg-D { background-position:  -336px 0 }
+.wc-lg-E { background-position:  -448px 0 }
+.wc-lg-F { background-position:  -560px 0 }
+.wc-lg-G { background-position:  -672px 0 }
+.wc-lg-H { background-position:  -784px 0 }
+.wc-lg-I { background-position:  -896px 0 }
+.wc-lg-J { background-position: -1008px 0 }
+.wc-lg-K { background-position: -1120px 0 }
+.wc-lg-L { background-position: -1232px 0 }
+.wc-lg-M { background-position: -1344px 0 }
+.wc-lg-N { background-position: -1456px 0 }
+.wc-lg-O { background-position: -1568px 0 }
+.wc-lg-P { background-position: -1680px 0 }
+.wc-lg-Q { background-position: -1792px 0 }
+.wc-lg-R { background-position: -1904px 0 }
+.wc-lg-S { background-position: -2016px 0 }
+.wc-lg-T { background-position: -2128px 0 }
+.wc-lg-U { background-position: -2240px 0 }
+.wc-lg-V { background-position: -2352px 0 }
+.wc-lg-W { background-position: -2464px 0 }
+.wc-lg-X { background-position: -2576px 0 }
+.wc-lg-Y { background-position: -2688px 0 }
+.wc-lg-Z { background-position: -2800px 0 }
