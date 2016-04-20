@@ -1,0 +1,17 @@
+.countdown {
+    width: 125px;
+    height: 175px;
+    background-image:url("/assets/NumberSprite_125_175.png");
+    display:inline-block;
+}
+
+.wc0 { background-position: 0 0 }
+.wc1 { background-position:  -125px 0 }
+.wc2 { background-position:  -250px 0 }
+.wc3 { background-position:  -375px 0 }
+.wc4 { background-position:  -500px 0 }
+.wc5 { background-position:  -625px 0 }
+.wc6 { background-position:  -750px 0 }
+.wc7 { background-position:  -875px 0 }
+.wc8 { background-position: -1000px 0 }
+.wc9 { background-position: -1125px 0 }

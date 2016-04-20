@@ -1,0 +1,36 @@
+/* Image sprite for the letter from
+http://www.itbrigadeinc.com/post/2012/09/09/CSS-Sprites-Best-Example-Ever!.aspx
+*/
+.tile {
+    width: 100px;
+    height: 100px;
+    background-image:url("/assets/LetterSprite_100.png");
+    display:inline-block;
+}
+
+.wcA { background-position: 0 0 }
+.wcB { background-position:  -112px 0 }
+.wcC { background-position:  -224px 0 }
+.wcD { background-position:  -336px 0 }
+.wcE { background-position:  -448px 0 }
+.wcF { background-position:  -560px 0 }
+.wcG { background-position:  -672px 0 }
+.wcH { background-position:  -784px 0 }
+.wcI { background-position:  -896px 0 }
+.wcJ { background-position: -1008px 0 }
+.wcK { background-position: -1120px 0 }
+.wcL { background-position: -1232px 0 }
+.wcM { background-position: -1344px 0 }
+.wcN { background-position: -1456px 0 }
+.wcO { background-position: -1568px 0 }
+.wcP { background-position: -1680px 0 }
+.wcQ { background-position: -1792px 0 }
+.wcR { background-position: -1904px 0 }
+.wcS { background-position: -2016px 0 }
+.wcT { background-position: -2128px 0 }
+.wcU { background-position: -2240px 0 }
+.wcV { background-position: -2352px 0 }
+.wcW { background-position: -2464px 0 }
+.wcX { background-position: -2576px 0 }
+.wcY { background-position: -2688px 0 }
+.wcZ { background-position: -2800px 0 }
