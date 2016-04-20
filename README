@@ -1,6 +1,36 @@
 ### WordCraft
 This is project 2 for CPSC 473.
-First commit - Anusha
+
+Get started instruction:
+
+1.  Clone this project
+2.  cd wordcraft
+3.  Run npm install to install all the dependencies modules
+    npm install
+
+4.  Run the server
+    node server.js
+
+5.  Navigate to localhost:3000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Source for game dictionary
 http://dreamsteep.com/downloads/word-games-and-wordsmith-utilities/120-the-english-open-word-list-eowl.html
