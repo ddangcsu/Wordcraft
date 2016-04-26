@@ -3,19 +3,42 @@
  undef: true, unused: true, strict: true, trailing: true, node: true */
 
 "use strict";
-var http = require("http");
-var express = require("express");
-var parser = require("body-parser");
-var io = require("socket.io")(); // Create an instance of Socket IO server
 
-// Initialize express
+var Promise = require("bluebird");
+
+// Create an express application
+var express = require("express");
 var app = express();
 
-// Create HTTP Server and attached express to it
-var server = http.createServer(app);
+// Create an HTTP server and attached express to it
+var server = require("http").createServer(app);
+var parser = require("body-parser");
 
-// Attach socket io to the server
-io.attach(server);
+// Create an instance of Socket IO server
+var io = require("socket.io")();
+
+// Include redis client
+var rClient = require("./modules/redisDB");
+
+// Initialize a dictionary
+var dictionary = require("./modules/dictionary");
+var dictFile = __dirname + "/assets/gamedict.txt";
+// Initialize dictionary
+dictionary(rClient, dictFile);
+
+// load dictionary
+dictionary.load(function (err, count, msg) {
+    if (err) {
+        console.log("Unable to load " + err);
+        console.log("Error message " + msg);
+    } else {
+        console.log("Dictionary loaded " + count);
+    }
+});
+
+// Setup route for dictionary check
+// Allow API of localhost:port/dict/:word
+app.use("/dict", dictionary.checkWord);
 
 // Include both json and urlencoded form parsers
 app.use(parser.json());
@@ -28,6 +51,9 @@ app.use(express.static(__dirname + "/client/"));
 app.get("/test", function (req, res) {
     res.status(200).end("It works");
 });
+
+// Tell IO to attached to the server
+io.attach(server);
 
 // Tell the server to listen on port 3000
 server.listen(3000);

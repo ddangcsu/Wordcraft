@@ -10,22 +10,27 @@ var router = require("express").Router();
 
 // Declare redis key to store dictionary for game
 // var key = "gamedict";
-var client,
-    key;
+var client;
+var key = "wc.dictionary";
+var dictFile;
 
 // Function to initialize the module
-var initialize = function (aClient, aKey) {
+var initialize = function (aClient, file) {
     client = aClient;
-    key = aKey;
+    dictFile = file;
     console.log("Game Dictionary initializing");
 };
 
 // Function to load into redis
-var loadDict = function(dictFile, callback) {
+var loadDict = function(callback) {
+
     if (client === undefined && key === undefined) {
         console.log("Error: must run init to pass in redis client and the key to store the dictionary");
         process.exit(1);
     }
+
+    console.log("Loading dictionary file: " + dictFile);
+
     // Load the dictionary file into redis
     fs.readFileAsync(dictFile).then(function (result) {
         // Built an array out of the words
@@ -59,7 +64,7 @@ var loadDict = function(dictFile, callback) {
     })
     .catch (function (err) {
         console.log("Error: " + err.stack);
-        callback(err, null, "Error loading dictionary ");
+        callback(err, null, "Error loading dictionary");
     });
 };
 
@@ -102,7 +107,7 @@ router.get("/:word", function (request, response) {
 });
 
 // Export the function module
-module.exports.init = initialize;
+module.exports = initialize;
 module.exports.load = loadDict;
 // Export Express router for this module
 module.exports.checkWord = router;
