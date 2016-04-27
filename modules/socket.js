@@ -73,7 +73,7 @@ var initServerIO = function (server, mongo, redis) {
             // Broadcast event player has left
             newPayload.type = "system";
             newPayload.from = "Server";
-            newPayload.players = playerList;
+            newPayload.players = [player];
             newPayload.msg = socket.name + " left the game";
             socket.broadcast.emit("left game", newPayload);
             console.dir(playerList);

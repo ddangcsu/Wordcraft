@@ -22,7 +22,7 @@ var dictionary = require("./modules/dictionary");
 var dictFile = __dirname + "/assets/gamedict.txt";
 
 // Include the realtime game module
-var socketIO = require("./modules/realtime");
+var socketIO = require("./modules/socket");
 
 // Initialize dictionary
 dictionary(rClient, dictFile);

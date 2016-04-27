@@ -31,15 +31,13 @@ var main = function () {
         console.log("Client id:" + "/#" + client.id);
         console.log("Player id:" + player.id);
         return {
-            //name: ko.observable(player.name),
-            //id: ko.observable(player.id), // id contain prefix of /#
             name: player.name,
             id: player.id,
             self: ("/#" + client.id === player.id) ? true: false,
         };
     };
 
-    // Define a GameRoom Model that contain an array of observable Player
+    // Define a GameRoom Model that contain an array of observable Players
     WC.Model.GameRoom = {
         // We track a list of players
         players: ko.observableArray(),
@@ -48,25 +46,69 @@ var main = function () {
         // player is an object of name, id
         add: function (player) {
             var self = this;
-            // Check if player already exist.  If yes, ignore it
-            var match = ko.utils.arrayFirst(self.players(), function (p) {
-                return p.id === player.id;
-            });
-
-            // Add player to the List if its a new Player
-            if (! match) {
-                self.players.push(new WC.Model.Player(player));
-            }
-
+            self.players.push(new WC.Model.Player(player));
         },
-
+        // Function to update the Game Room with a list of players
+        update: function (players) {
+            var self = this;
+            // Compute to get only new players the server sent
+            var diff = _.differenceBy(players, self.players(), "id");
+            // Loop through the players to to the Player Join list
+            _.each(diff, function(player) {
+                self.add(player);
+            });
+        },
         // When we need to delete/remove a player from the room
         // when the player quit the game
         remove: function (player) {
             var self = this;
-            self.players.remove(player);
+            self.players.remove(function (p) {
+                return p.id === player.id;
+            });
         }
+    };
 
+    // Define a function to model a chat message
+    WC.Model.Message = function (msg) {
+        return {
+            type: msg.type + "-msg",
+            from: function () {
+                var formatFrom = "";
+                if (msg.type === "private") {
+                    formatFrom = "Whisper from " + msg.from;
+                } else {
+                    formatFrom = msg.from;
+                }
+                return formatFrom;
+            },
+            text: msg.msg,
+        };
+    };
+
+    // Define a ChatRoom Model that contain an array of observable messages
+    WC.Model.ChatRoom = {
+        msgInput: ko.observable(),
+        messages: ko.observableArray(),
+
+        // Function to add a message into the messages array
+        add: function (msg) {
+            var self = this;
+            self.messages.push(new WC.Model.Message(msg));
+        },
+
+        // Send chat method
+        send: function () {
+            var self = this;
+            if (self.msgInput() !== "") {
+                
+            }
+        },
+
+        // option to clear the chat room windows
+        clear: function () {
+            var self = this;
+            self.messages([]);
+        }
     };
 
     // Function to greet the server request to join
@@ -75,11 +117,12 @@ var main = function () {
         connected = true;
         console.log("Client connected to server");
         console.dir(client);
+        client.name = "player" + Date.now();
 
         // Greet the server to join the server
         var newPayload = {
             type: "greeting",
-            from: "player" + Date.now(),
+            from: client.name,
             msg: "Hello"
         };
         client.emit("hello", newPayload);
@@ -111,14 +154,26 @@ var main = function () {
     // When a Player Join, need to update the Player List and also display
     // The server broadcast message
     WC.Controller.playerJoin = function (data) {
-        // Loop through the players to to the Player Join list
-        _.each(data.players, function(player) {
-            WC.Model.GameRoom.add(player);
-        });
+        // Tell Model to update itself with the list of players
+        WC.Model.GameRoom.update(data.players);
 
         // Then we display the message
         WC.Controller.displayMessage(data);
 
+    };
+
+    // Function to handle when a player leave the game
+    // Need to update the Player List to remove player and also display
+    // The server broadcast message.  Payload for players should be a single
+    // player that left the game
+    WC.Controller.playerLeft = function (data) {
+        // Remove the player from playerList
+        _.each(data.players, function(player) {
+            WC.Model.GameRoom.remove(player);
+        });
+
+        // Then display the message
+        WC.Controller.displayMessage(data);
     };
 
     // Function to initialize IO connection and setup
@@ -135,6 +190,10 @@ var main = function () {
         // Handle welcome event from server.  Server use this event to
         // notify a new player join the game
         client.on("join game", WC.Controller.playerJoin);
+
+        // Handle welcome event from server.  Server use this event to
+        // notify a new player join the game
+        client.on("left game", WC.Controller.playerLeft);
 
         // Handle disconnect event when the server disconnect the client
         client.on("disconnect", function () {
