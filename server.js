@@ -4,7 +4,7 @@
 
 "use strict";
 
-var Promise = require("bluebird");
+// var Promise = require("bluebird");
 
 // Create an express application
 var express = require("express");
@@ -14,15 +14,16 @@ var app = express();
 var server = require("http").createServer(app);
 var parser = require("body-parser");
 
-// Create an instance of Socket IO server
-var io = require("socket.io")();
-
 // Include redis client
 var rClient = require("./modules/redisDB");
 
-// Initialize a dictionary
+// Include game dictionary
 var dictionary = require("./modules/dictionary");
 var dictFile = __dirname + "/assets/gamedict.txt";
+
+// Include the realtime game module
+var socketIO = require("./modules/realtime");
+
 // Initialize dictionary
 dictionary(rClient, dictFile);
 
@@ -36,13 +37,13 @@ dictionary.load(function (err, count, msg) {
     }
 });
 
-// Setup route for dictionary check
-// Allow API of localhost:port/dict/:word
-app.use("/dict", dictionary.checkWord);
-
 // Include both json and urlencoded form parsers
 app.use(parser.json());
 app.use(parser.urlencoded({extended: true}));
+
+// Setup route for dictionary check
+// Allow API of localhost:port/dict/:word
+app.use("/dict", dictionary.checkWord);
 
 // Setup express to serve static file
 app.use(express.static(__dirname + "/client/"));
@@ -53,7 +54,7 @@ app.get("/test", function (req, res) {
 });
 
 // Tell IO to attached to the server
-io.attach(server);
+socketIO.init(server, null, rClient);
 
 // Tell the server to listen on port 3000
 server.listen(3000);
