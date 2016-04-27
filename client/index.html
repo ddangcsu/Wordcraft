@@ -110,10 +110,8 @@
                 </div>
                 <div class="panel-body players-body">
                   <!-- Player dynamically get added in here via Knockout Binding -->
-                  <ul id="playerList">
-                    <li>Player 1</li>
-                    <li>Player 2</li>
-                    <li class="self">Player 3</li>
+                  <ul id="playerList" data-bind="foreach: GameRoom.players">
+                    <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
                   </ul>
                 </div>
               </div>

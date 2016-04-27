@@ -26,11 +26,15 @@ var main = function () {
 
     // Define a function to create a single KO Player Model
     WC.Model.Player = function (player) {
-        return ({
+        console.log("Client id:" + client.id);
+        console.log("Player id:" + player.id.substr(2));
+        return {
             name: ko.observable(player.name),
             id: ko.observable(player.id),
-            self: (client.id === player.id) ? true: false,
-        });
+            // The client.id does not contain the prefix /# like the one from
+            // the server replied
+            self: (client.id === player.id.substr(2)) ? true: false,
+        };
     };
 
     // Define a GameRoom Model that contain an array of observable Player
