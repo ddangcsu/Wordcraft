@@ -29,7 +29,7 @@ var initServerIO = function (server, mongo, redis) {
         //console.log("Total connected clients: " + _.size(io.sockets.connected));
 
         // Handle greeting from client
-        // Hello payload contain: type, from, msg
+        // Hello payload contain: type, from, to, msg
         socket.on("hello", function (payload) {
             socket.name = payload.from;
             playerList.push({name: socket.name, id: socket.id});
@@ -40,6 +40,7 @@ var initServerIO = function (server, mongo, redis) {
             var newPayload = {};
             newPayload.type = "greeting";
             newPayload.from = "Server";
+            newPayload.to = "";
             newPayload.msg = "Hi " + socket.name +", Welcome to WordCraft game";
 
             socket.emit("hello", newPayload);
@@ -49,11 +50,41 @@ var initServerIO = function (server, mongo, redis) {
             newPayload = {};
             newPayload.type = "system";
             newPayload.from = "Server";
-            newPayload.players = playerList;
+            newPayload.to = "";
             newPayload.msg = socket.name + " has joined the game";
             io.emit("join game", newPayload);
             console.log(socket.name + " has joined the game");
+            // Craft another payload to send just the list of players
+            newPayload = {};
+            newPayload.players = playerList;
+            io.emit("player joined", newPayload);
 
+        });
+
+        // Handle chat message from client
+        // Payload contains: type, from, to, msg
+        socket.on("send message", function (payload) {
+            var newPayload = {};
+            if (payload.type === "private") {
+                // Deal with private message
+                var sendTo = payload.to.id;
+
+                // Craft the payload for client
+                newPayload.type = payload.type;
+                newPayload.from = "Whisper from";
+                newPayload.to = payload.from;
+                newPayload.msg = payload.msg;
+
+                console.log("Forward private message to " + sendTo);
+                console.log("Payload is: " + newPayload);
+                // Send the message privately to the sendTo socket ID
+                socket.broadcast.to(sendTo).emit("send message", newPayload);
+
+            } else if (payload.type === "public") {
+                // Just forward the payload to others
+                console.log("Forward public message");
+                socket.broadcast.emit("send message", payload);
+            }
         });
 
         // Show when a client disconnected
@@ -73,9 +104,14 @@ var initServerIO = function (server, mongo, redis) {
             // Broadcast event player has left
             newPayload.type = "system";
             newPayload.from = "Server";
-            newPayload.players = [player];
+            newPayload.to = "";
             newPayload.msg = socket.name + " left the game";
-            socket.broadcast.emit("left game", newPayload);
+            socket.broadcast.emit("leave game", newPayload);
+
+            // Separate message to tell client to update the list of player
+            newPayload = {};
+            newPayload.players = [player];
+            socket.broadcast.emit("player left", newPayload);
             console.dir(playerList);
         });
 

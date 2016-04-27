@@ -72,16 +72,7 @@ var main = function () {
     WC.Model.Message = function (msg) {
         return {
             type: msg.type + "-msg",
-            from: function () {
-                var formatFrom = "";
-                if (msg.type === "private") {
-                    formatFrom = "Whisper from " + msg.from;
-                } else {
-                    formatFrom = msg.from;
-                }
-                return formatFrom;
-            },
-            text: msg.msg,
+            message: msg.from + " " + msg.to + ": " + msg.msg,
         };
     };
 
@@ -98,15 +89,66 @@ var main = function () {
 
         // Send chat method
         send: function () {
-            var self = this;
+            var self = this.ChatRoom;
             if (self.msgInput() !== "") {
-                
+                var chatPayload = {};
+                var cmd = self.msgInput().split(" ");
+
+                // Determine if chat is of type Whisper
+                if (cmd[0].toUpperCase() === "/W") {
+                    // Check if sending to a valid player
+                    var toPlayer = _.find(WC.Model.GameRoom.players(), function (player) {
+                        return (player.name.toLowerCase() === cmd[1].toLowerCase());
+                    });
+
+                    if (toPlayer && cmd[1].toLowerCase() !== client.name.toLowerCase()) {
+                        // A valid whisper
+                        var msgPos = cmd[0].length + cmd[1].length + 2;
+                        chatPayload.type = "private";
+                        chatPayload.from = client.name;
+                        chatPayload.to = toPlayer;
+                        chatPayload.msg = self.msgInput().slice(msgPos);
+                    } else {
+                        console.log("Invalid whisper message.");
+                        // TODO: Need to put a message into chat window to show
+                        // the invalid whisper
+                        self.msgInput("");
+                        return;
+                    }
+                } else {
+                    // Normal public chat
+                    chatPayload.type = "public";
+                    chatPayload.from = client.name;
+                    chatPayload.to = "";
+                    chatPayload.msg = self.msgInput();
+                }
+
+                // Reset the input box
+                self.msgInput("");
+
+                // Send the chat message
+                client.emit("send message", chatPayload);
+
+                // Self add the chat message.  Basically need to convert the
+                // message into the payload the server send
+                if (chatPayload.type === "private") {
+                    chatPayload.from = "Whisper to " + chatPayload.to.name;
+                    chatPayload.to = "";
+                } else if (chatPayload.type === "public") {
+                    chatPayload.from = "Self";
+                } else {
+                    // TODO: reserve for game specific such as ready check
+                    // and ready command
+                }
+                // Tell Controller to display the message
+                WC.Controller.displayMessage(chatPayload);
             }
+            return false;
         },
 
         // option to clear the chat room windows
         clear: function () {
-            var self = this;
+            var self = this.ChatRoom;
             self.messages([]);
         }
     };
@@ -128,52 +170,44 @@ var main = function () {
         client.emit("hello", newPayload);
 
         // Add self so that it show up as first player on the list
-        WC.Model.GameRoom.add({name: newPayload.from, id: "/#" + client.id});
+        WC.Model.GameRoom.add({name: client.name, id: "/#" + client.id});
     };
 
     // Function to display the chat message (need to convert to KO)
     WC.Controller.displayMessage = function (data) {
-        var $msg = $("<p>");
+        // var $msg = $("<p>");
         var $chatWindow = WC.UI.chatRoom;
-
-        if (data.type === "greeting") {
-            $chatWindow.empty();
-        }
-        // Mark the message type
-        $msg.addClass(data.type + "-msg");
-
-        // Add the message text
-        $msg.text(data.from + ": " + data.msg);
-
-        $chatWindow.append($msg);
+        //
+        // if (data.type === "greeting") {
+        //     $chatWindow.empty();
+        // }
+        // // Mark the message type
+        // $msg.addClass(data.type + "-msg");
+        //
+        // // Add the message text
+        // $msg.text(data.from + ": " + data.msg);
+        //
+        // $chatWindow.append($msg);
+        WC.Model.ChatRoom.add(data);
         // Auto scroll the Chat DIV to the bottom
         $chatWindow.scrollTop($chatWindow.get(0).scrollHeight);
     };
 
     // Function to handle player join a game
-    // When a Player Join, need to update the Player List and also display
-    // The server broadcast message
-    WC.Controller.playerJoin = function (data) {
+    // When a Player Join, need to update the Player List
+    WC.Controller.playerJoined = function (data) {
         // Tell Model to update itself with the list of players
         WC.Model.GameRoom.update(data.players);
-
-        // Then we display the message
-        WC.Controller.displayMessage(data);
-
     };
 
     // Function to handle when a player leave the game
-    // Need to update the Player List to remove player and also display
-    // The server broadcast message.  Payload for players should be a single
-    // player that left the game
+    // Need to update the Player List to remove player.
+    // Payload for players should be a single player that left the game
     WC.Controller.playerLeft = function (data) {
         // Remove the player from playerList
         _.each(data.players, function(player) {
             WC.Model.GameRoom.remove(player);
         });
-
-        // Then display the message
-        WC.Controller.displayMessage(data);
     };
 
     // Function to initialize IO connection and setup
@@ -184,17 +218,6 @@ var main = function () {
         // Initialize whether the client connected
         client.on("connect", WC.Controller.greetServer);
 
-        // Handle greeting event from server
-        client.on("hello", WC.Controller.displayMessage);
-
-        // Handle welcome event from server.  Server use this event to
-        // notify a new player join the game
-        client.on("join game", WC.Controller.playerJoin);
-
-        // Handle welcome event from server.  Server use this event to
-        // notify a new player join the game
-        client.on("left game", WC.Controller.playerLeft);
-
         // Handle disconnect event when the server disconnect the client
         client.on("disconnect", function () {
             connected = false;
@@ -202,6 +225,26 @@ var main = function () {
             // Close the connection to prevent continous retry of connection
             client.close();
         });
+
+        // Handle greeting event from server
+        client.on("hello", WC.Controller.displayMessage);
+
+        // Handle welcome event from server.  Server use this event to
+        // notify a new player join the game
+        client.on("join game", WC.Controller.displayMessage);
+
+        // Handle welcome event from server.  Server use this event to
+        // notify a new player join the game
+        client.on("leave game", WC.Controller.displayMessage);
+
+        // Handle event to update the Player List when player joined
+        client.on("player joined", WC.Controller.playerJoined);
+
+        // Handle event to update the Player List when player left
+        client.on("player left", WC.Controller.playerLeft);
+
+        // Handle send message to update chat
+        client.on("send message", WC.Controller.displayMessage);
 
     };
 
