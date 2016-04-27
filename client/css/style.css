@@ -23,9 +23,18 @@ body {
     overflow-y: scroll;
 }
 
-.private-chat {
-    color:purple;
+.private-msg {
+    color: purple;
 }
+
+.system-msg {
+    color: red;
+}
+
+.greeting-msg {
+    color: blue;
+}
+
 .gameboard-body {
     min-height: 560px;
     max-height: 600px;

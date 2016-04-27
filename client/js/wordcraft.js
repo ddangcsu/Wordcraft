@@ -80,7 +80,7 @@ var main = function () {
             $chatWindow.empty();
         }
         // Mark the message type
-        $msg.addClass(data.type + "message");
+        $msg.addClass(data.type + "-msg");
 
         // Add the message text
         $msg.text(data.from + ": " + data.msg);
