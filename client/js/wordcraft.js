@@ -26,14 +26,16 @@ var main = function () {
 
     // Define a function to create a single KO Player Model
     WC.Model.Player = function (player) {
-        console.log("Client id:" + client.id);
-        console.log("Player id:" + player.id.substr(2));
+        // The client.id does not contain the prefix /# like the one from
+        // the server replied
+        console.log("Client id:" + "/#" + client.id);
+        console.log("Player id:" + player.id);
         return {
-            name: ko.observable(player.name),
-            id: ko.observable(player.id),
-            // The client.id does not contain the prefix /# like the one from
-            // the server replied
-            self: (client.id === player.id.substr(2)) ? true: false,
+            //name: ko.observable(player.name),
+            //id: ko.observable(player.id), // id contain prefix of /#
+            name: player.name,
+            id: player.id,
+            self: ("/#" + client.id === player.id) ? true: false,
         };
     };
 
@@ -46,8 +48,16 @@ var main = function () {
         // player is an object of name, id
         add: function (player) {
             var self = this;
-            self.players.push(new WC.Model.Player(player));
-            console.dir(self.players);
+            // Check if player already exist.  If yes, ignore it
+            var match = ko.utils.arrayFirst(self.players(), function (p) {
+                return p.id === player.id;
+            });
+
+            // Add player to the List if its a new Player
+            if (! match) {
+                self.players.push(new WC.Model.Player(player));
+            }
+
         },
 
         // When we need to delete/remove a player from the room
@@ -73,6 +83,9 @@ var main = function () {
             msg: "Hello"
         };
         client.emit("hello", newPayload);
+
+        // Add self so that it show up as first player on the list
+        WC.Model.GameRoom.add({name: newPayload.from, id: "/#" + client.id});
     };
 
     // Function to display the chat message (need to convert to KO)
@@ -100,15 +113,7 @@ var main = function () {
     WC.Controller.playerJoin = function (data) {
         // Loop through the players to to the Player Join list
         _.each(data.players, function(player) {
-            // Check if player already exist.  If yes, ignore it
-            var match = ko.utils.arrayFirst(WC.Model.GameRoom.players(), function (p) {
-                return p.id() === player.id;
-            });
-
-            // Add player to the List if its a new Player
-            if (! match) {
-                WC.Model.GameRoom.add(player);
-            }
+            WC.Model.GameRoom.add(player);
         });
 
         // Then we display the message
