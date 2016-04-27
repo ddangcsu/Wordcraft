@@ -9,6 +9,8 @@ var _ = require("lodash");
 var mongoClient,
     redisClient;
 
+// TODO: We should save the playerList inside a database instead
+// Should think about this
 var playerList = [];
 
 var initServerIO = function (server, mongo, redis) {
@@ -32,6 +34,7 @@ var initServerIO = function (server, mongo, redis) {
         // Hello payload contain: type, from, to, msg
         socket.on("hello", function (payload) {
             socket.name = payload.from;
+            //TODO: We should save the player information into database
             playerList.push({name: socket.name, id: socket.id});
 
             console.log(payload.type + ": <" + socket.name + "> says " + payload.msg);
@@ -96,6 +99,8 @@ var initServerIO = function (server, mongo, redis) {
                 name: socket.name,
                 id: socket.id
             };
+
+            // TODO: This removal of players should be from database
             // Get the user that has id match with client.id
             // _.find return an object
             //var player = _.find(playerList, {"id": socket.id} );
