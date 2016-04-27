@@ -7,19 +7,18 @@ var main = function () {
     "use strict";
 
     // WordCraft namespace
-    var WC = {};
+    var WC = {
+        // Define the User Interface jQuery selector for each DOM section
+        UI: {
+            chatRoom: $(".chatroom-body"),
+            playerList: $(".players-body"),
+        },
+        // Define holder for Controller functions
+        Controller: {},
 
-    // WordCraft UI Class Name selector
-    WC.UI = {
-        chatRoom: $(".chatroom-body"),
-        playerList: $(".players-body"),
+        // Define holder for KO View Model
+        Model: {}
     };
-
-    // WordCraft Controller function
-    WC.Controller = {};
-
-    // WordCraft KO Model
-    WC.Model = {};
 
     // Socket IO information
     var client,
@@ -41,7 +40,7 @@ var main = function () {
 
         // When we need to add a new player into the room
         // player is an object of name, id
-        join: function (player) {
+        add: function (player) {
             var self = this;
             self.players.push(new WC.Model.Player(player));
             console.dir(self.players);
@@ -49,7 +48,7 @@ var main = function () {
 
         // When we need to delete/remove a player from the room
         // when the player quit the game
-        leave: function (player) {
+        remove: function (player) {
             var self = this;
             self.players.remove(player);
         }
@@ -66,7 +65,7 @@ var main = function () {
         // Greet the server to join the server
         var newPayload = {
             type: "greeting",
-            from: faker.name.findName(),
+            from: "player" + Date.now(),
             msg: "Hello"
         };
         client.emit("hello", newPayload);
@@ -122,7 +121,7 @@ var main = function () {
         client.on("connect", WC.Controller.greetServer);
 
         // Handle greeting event from server
-        client.on("hello", WC.Controller.showMessage);
+        client.on("hello", WC.Controller.displayMessage);
 
         // Handle welcome event from server.  Server use this event to
         // notify a new player join the game
@@ -138,11 +137,13 @@ var main = function () {
 
     };
 
+    // Apply KnockOut binding
+    ko.applyBindings(WC.Model);
+
     // Initialize Socket IO Connection and events handling
     WC.initIO();
 
-    // Apply KnockOut binding
-    ko.applyBindings(WC.Model);
+
 };
 
 $(document).ready(main);
