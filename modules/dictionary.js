@@ -56,14 +56,10 @@ var loadDict = function() {
             console.log("Adding words into redis");
             return client.saddAsync(key, words);
         })
-        .then (function (rowCount) {
-            // now if load is called, its then will get rowCount
-            resolve(rowCount);
-        })
-        .catch(function (err) {
-            // Error
-            reject(err);
-        });
+        // We resolve the rowCount return from saddAsync
+        .then (resolve)
+        // We reject any error caught
+        .catch(reject);
 
     });
 };
@@ -73,14 +69,8 @@ var findWord = function (word) {
     // Return a promise
     return new Promise (function (resolve, reject) {
         client.sismemberAsync(key, word)
-        .then(function (searchResult) {
-            // Redis result will be 1 if found or 0 if not
-            // Change it to true or false
-            resolve((searchResult)? true: false);
-        })
-        .catch(function (err) {
-            reject(err);
-        });
+        .then(resolve)
+        .catch(reject);
     });
 };
 
