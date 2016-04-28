@@ -22,61 +22,65 @@ var initialize = function (aClient, file) {
 };
 
 // Function to load into redis
-var loadDict = function(callback) {
+var loadDict = function() {
+    // This function will return a Promise
+    return new Promise(function (resolve, reject) {
+        if (client === undefined || dictFile === undefined) {
+            reject(new Error("dictionary not initialized"));
+        }
 
-    if (client === undefined && key === undefined) {
-        console.log("Error: must run init to pass in redis client and the key to store the dictionary");
-        process.exit(1);
-    }
-
-    console.log("Loading dictionary file: " + dictFile);
-
-    // Load the dictionary file into redis
-    fs.readFileAsync(dictFile).then(function (result) {
-        // Built an array out of the words
-        var words = result.toString().split("\n");
-
-        // If exist
-        client.existsAsync(key).then(function (result) {
-            if (result) {
+        // Check if Redis key
+        client.existsAsync(key).then(function (exist) {
+            if (exist) {
                 console.log("Key " + key + " existed");
                 console.log("Delete key " + key);
+                // Delete it
                 return client.delAsync(key);
             } else {
                 console.log("Key " + key + " not existed");
-                return new Promise.resolve(true);
+                // Just return the next promise
+                return Promise.resolve(true);
             }
-
         })
-        .then (function () {
+        .then(function () {
+            // We read file
+            console.log("Reading file ...");
+            console.log("path: " + dictFile);
+            return fs.readFileAsync(dictFile);
+        })
+        .then (function (fileContent) {
+            // Turn the file content into an array of words
+            // split by the new line
+            var words = fileContent.toString().split("\n");
             // We load all the words into redis
             console.log("Adding words into redis");
             return client.saddAsync(key, words);
         })
         .then (function (rowCount) {
-            console.log("Success load dictionary into " + key);
-            callback(null, rowCount, "Success load dictionary");
+            // now if load is called, its then will get rowCount
+            resolve(rowCount);
         })
-        .catch (function (err) {
-            console.log("Error encountered: " + err);
-            callback(err, null, "Error loading dictionary ");
+        .catch(function (err) {
+            // Error
+            reject(err);
         });
-    })
-    .catch (function (err) {
-        console.log("Error: " + err.stack);
-        callback(err, null, "Error loading dictionary");
+
     });
 };
 
 // Function to check the word from redis dictionary
-var findWord = function (word, callback) {
-    client.sismember(key, word, function (err, result) {
-        if (err) {
-            console.log("Encountered error checking word " + word);
-            callback(err, result, "Error checking dictionary");
-        } else {
-            callback(err, result, null);
-        }
+var findWord = function (word) {
+    // Return a promise
+    return new Promise (function (resolve, reject) {
+        client.sismemberAsync(key, word)
+        .then(function (searchResult) {
+            // Redis result will be 1 if found or 0 if not
+            // Change it to true or false
+            resolve((searchResult)? true: false);
+        })
+        .catch(function (err) {
+            reject(err);
+        });
     });
 };
 
@@ -88,17 +92,18 @@ router.get("/:word", function (request, response) {
     if (request.params.word) {
         // Dictionary contains lowercase words.  Convert before check
         word = request.params.word.toLowerCase();
-        findWord(word, function (err, result) {
-            if (err) {
-                console.log("Error checkWord" + err);
-                response.status(400).end("Error with check word");
-            } else if (result) {
+        findWord(word).then(function (result) {
+            if (result) {
                 console.log("Found " + word);
-                response.status(200).json({status:true});
             } else {
                 console.log("Word <" + word + "> not exist in dictionary");
-                response.status(200).json({status:false});
             }
+            // Response the json and convert result from 0 and 1
+            // to true and false
+            response.json({valid: (result) ? true : false});
+        })
+        .catch(function (err) {
+            console.log(err);
         });
     } else {
         console.log("Missing word to check");

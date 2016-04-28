@@ -28,13 +28,13 @@ var socketIO = require("./modules/socket");
 dictionary(rClient, dictFile);
 
 // load dictionary
-dictionary.load(function (err, count, msg) {
-    if (err) {
-        console.log("Unable to load " + err);
-        console.log("Error message " + msg);
-    } else {
-        console.log("Dictionary loaded " + count);
-    }
+dictionary.load().then(function (result) {
+    console.log("Dictionary loaded " + result);
+})
+.catch(function (err) {
+    console.log(err);
+    console.log("Program halted");
+    process.exit(1);
 });
 
 // Include both json and urlencoded form parsers
