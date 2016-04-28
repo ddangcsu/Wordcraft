@@ -104,13 +104,13 @@
           <div class="col-sm-3 col-md-3 col-lg-3">
             <!-- Begin row to hold the game room -->
             <div class="row">
-              <div class="panel panel-info">
+              <div class="panel panel-info" data-bind="with: GameRoom">
                 <div class="panel-heading">
                   <h4 class="pannel-title">Players</h4>
                 </div>
                 <div class="panel-body players-body">
                   <!-- Player dynamically get added in here via Knockout Binding -->
-                  <ul id="playerList" data-bind="foreach: GameRoom.players">
+                  <ul id="playerList" data-bind="foreach: players">
                     <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
                   </ul>
                 </div>
@@ -119,20 +119,20 @@
             <!-- End row to hold the game room -->
             <!-- Begin row to hold the chatroom -->
             <div class="row">
-              <div class="panel panel-info">
+              <div class="panel panel-info" data-bind="with: ChatRoom">
                 <div class="panel-heading">
                   <h4 class="pannel-title">Chat Room</h4>
                 </div>
                 <!-- KO dynamic bind for the chatroom -->
-                <div class="panel-body chatroom-body" data-bind="foreach: ChatRoom.messages">
+                <div class="panel-body chatroom-body" data-bind="foreach: messages">
                   <p data-bind="text: message, css: type"></p>
                 </div>
                 <div class="panel-footer">
                   <div class="input-group">
-                    <input type="text" class="form-control" data-bind="textInput: ChatRoom.msgInput">
+                    <input type="text" class="form-control" data-bind="value: msgInput">
                     <span class="input-group-btn">
-                      <button class="btn" data-bind="click: ChatRoom.send">Send</button>
-                      <button class="btn" data-bind="click: ChatRoom.clear">Clear</button>
+                      <button class="btn" data-bind="click: send">Send</button>
+                      <button class="btn" data-bind="click: clear">Clear</button>
                     </span>
                   </div>
                 </div>

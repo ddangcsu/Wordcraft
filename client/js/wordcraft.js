@@ -13,7 +13,7 @@ var main = function () {
             chatRoom: $(".chatroom-body"),
             playerList: $(".players-body"),
         },
-        // Define holder for Controller functions
+        // Define holder for Func functions
         Controller: {},
 
         // Define holder for KO View Model
@@ -28,8 +28,8 @@ var main = function () {
     WC.Model.Player = function (player) {
         // The client.id does not contain the prefix /# like the one from
         // the server replied
-        console.log("Client id:" + "/#" + client.id);
-        console.log("Player id:" + player.id);
+        // console.log("Client id:" + "/#" + client.id);
+        // console.log("Player id:" + player.id);
         return {
             name: player.name,
             id: player.id,
@@ -46,7 +46,7 @@ var main = function () {
         // player is an object of name, id
         add: function (player) {
             var self = this;
-            self.players.push(new WC.Model.Player(player));
+            self.players.push(WC.Model.Player(player));
         },
         // Function to update the Game Room with a list of players
         update: function (players) {
@@ -84,12 +84,12 @@ var main = function () {
         // Function to add a message into the messages array
         add: function (msg) {
             var self = this;
-            self.messages.push(new WC.Model.Message(msg));
+            self.messages.push(WC.Model.Message(msg));
         },
 
         // Send chat method
         send: function () {
-            var self = this.ChatRoom;
+            var self = this;
             if (self.msgInput() !== "") {
                 var chatPayload = {};
                 var cmd = self.msgInput().split(" ");
@@ -148,7 +148,7 @@ var main = function () {
 
         // option to clear the chat room windows
         clear: function () {
-            var self = this.ChatRoom;
+            var self = this;
             self.messages([]);
         }
     };
@@ -175,19 +175,7 @@ var main = function () {
 
     // Function to display the chat message (need to convert to KO)
     WC.Controller.displayMessage = function (data) {
-        // var $msg = $("<p>");
         var $chatWindow = WC.UI.chatRoom;
-        //
-        // if (data.type === "greeting") {
-        //     $chatWindow.empty();
-        // }
-        // // Mark the message type
-        // $msg.addClass(data.type + "-msg");
-        //
-        // // Add the message text
-        // $msg.text(data.from + ": " + data.msg);
-        //
-        // $chatWindow.append($msg);
         WC.Model.ChatRoom.add(data);
         // Auto scroll the Chat DIV to the bottom
         $chatWindow.scrollTop($chatWindow.get(0).scrollHeight);
@@ -211,7 +199,7 @@ var main = function () {
     };
 
     // Function to initialize IO connection and setup
-    WC.initIO = function () {
+    WC.Controller.initIO = function () {
         // Initiate SocketIO connection with server
         client = io();
 
@@ -226,16 +214,13 @@ var main = function () {
             client.close();
         });
 
-        // Handle greeting event from server
-        client.on("hello", WC.Controller.displayMessage);
-
-        // Handle welcome event from server.  Server use this event to
-        // notify a new player join the game
-        client.on("join game", WC.Controller.displayMessage);
-
-        // Handle welcome event from server.  Server use this event to
-        // notify a new player join the game
-        client.on("leave game", WC.Controller.displayMessage);
+        // Common events that will use Display Message which is to write to
+        // chat windows only
+        // Server greeting, player join game, player leave game, send chat
+        var events = ["hello", "join game", "leave game", "send message"];
+        _.each(events, function (event) {
+            client.on(event, WC.Controller.displayMessage);
+        });
 
         // Handle event to update the Player List when player joined
         client.on("player joined", WC.Controller.playerJoined);
@@ -243,16 +228,13 @@ var main = function () {
         // Handle event to update the Player List when player left
         client.on("player left", WC.Controller.playerLeft);
 
-        // Handle send message to update chat
-        client.on("send message", WC.Controller.displayMessage);
-
     };
 
     // Apply KnockOut binding
     ko.applyBindings(WC.Model);
 
     // Initialize Socket IO Connection and events handling
-    WC.initIO();
+    WC.Controller.initIO();
 
 
 };
