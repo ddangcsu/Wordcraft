@@ -155,6 +155,19 @@ var initServerIO = function (server, mongo, redis) {
             // _.find return an object
             //var player = _.find(playerList, {"id": socket.id} );
             _.remove(playerList, player);
+            
+            // Delete player from current game
+            db.collection("game").deleteOne(
+                { "sid": player.id },
+                function(err, results) {
+                    if (err) {
+                        console.log("Delete unsuccessful.");
+                    }
+                    else {
+                        console.log("Player was removed from game.");
+                    }
+                }
+            );
 
             // Broadcast event player has left
             newPayload.type = "system";
