@@ -7,7 +7,7 @@ var io = require("socket.io")();
 var _ = require("lodash");
 
 var mongoClient = require("mongodb").MongoClient,
-    url = "mongodb://localhost:27017/players",
+    url = "mongodb://localhost:27017/wordcraft",
     db,
     redisClient;
     
@@ -64,6 +64,25 @@ var initServerIO = function (server, mongo, redis) {
                     }
                     else {
                         console.log("Inserted a player into the players collection.");
+                    }
+                }
+            );
+            
+            // Add player to game
+            // This may be moved somewhere else if we decide to create groups
+            // Can add an if statement to limit the number of players in a game
+            db.collection("game").insertOne( {
+                    "sid": socket.id,
+                    "username": socket.name,
+                    "currentScore": 0,
+                    "wordList": []
+                }, 
+                function(err, result) {
+                    if (err) {
+                        console.log("Could not add player to game.");
+                    }
+                    else {
+                        console.log("Inserted a player into the game collection.");
                     }
                 }
             );
