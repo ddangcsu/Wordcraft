@@ -6,8 +6,21 @@
 var io = require("socket.io")();
 var _ = require("lodash");
 
-var mongoClient,
+var mongoClient = require("mongodb").MongoClient,
+    url = "mongodb://localhost:27017/players",
+    db,
     redisClient;
+    
+//check if sever is connected
+mongoClient.connect(url, function(err, database) {
+    if (err) {
+        console.log("Could not successfully connect to database.");
+    }
+    else {
+        console.log("Connected correctly to server.");
+        db = database;
+    }
+});
 
 // TODO: We should save the playerList inside a database instead
 // Should think about this
@@ -36,6 +49,24 @@ var initServerIO = function (server, mongo, redis) {
             socket.name = payload.from;
             //TODO: We should save the player information into database
             playerList.push({name: socket.name, id: socket.id});
+            
+            //Save to database
+            db.collection("players").insertOne( {
+                    "sid": socket.id,
+                    "username": socket.name,
+                    //"password": socket.password,
+                    "highScore": 0,
+                    "gamesPlayed": 0
+                }, 
+                function(err, result) {
+                    if (err) {
+                        console.log("Could not save player.");
+                    }
+                    else {
+                        console.log("Inserted a player into the players collection.");
+                    }
+                }
+            );
 
             console.log(payload.type + ": <" + socket.name + "> says " + payload.msg);
 
