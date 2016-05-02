@@ -155,6 +155,15 @@ var main = function () {
             return false;
         },
 
+        // Send chat method when enter key is pressed
+        onEnterKey: function (data, event) {
+            var self = this;
+            if (event.keyCode === 13) {
+                self.send();
+                return false;
+            }
+            return true;
+        },
         // option to clear the chat room windows
         clear: function () {
             var self = this;
@@ -181,6 +190,29 @@ var main = function () {
         return ("number-lg wc-lg-" + digit);
     }, WC.Model.CountDown);
 
+    // Define a model for the Game Timer
+    WC.Model.GameTimer = {
+        display: ko.observable(false),
+        value: ko.observable(),
+    };
+    // Define two KO computable to show the tenth and the digit
+    WC.Model.GameTimer.tenth = ko.computed(function () {
+        var self = this;
+        var tenth = Math.floor(self.value() / 10);
+        return ("number-sm wc-sm-" + tenth);
+    }, WC.Model.GameTimer);
+
+    WC.Model.GameTimer.digit = ko.computed(function () {
+        var self = this;
+        var digit = self.value() % 10;
+        return ("number-sm wc-sm-" + digit);
+    }, WC.Model.GameTimer);
+
+    // Define a model for the Game Timer
+    WC.Model.GameLetters = {
+        display: ko.observable(false),
+        letters: ko.observableArray(),
+    };
 
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
@@ -230,7 +262,6 @@ var main = function () {
     // Function to display the countdown timer received from the server
     // Data payload is: {"timer": number}
     WC.Controller.displayCountDown = function (data) {
-        //TODO: Need to update the Countdown Model
         if (data.timer > 0) {
             WC.Model.CountDown.display(true);
         } else {
@@ -238,15 +269,43 @@ var main = function () {
         }
         WC.Model.CountDown.value(data.timer);
 
-        console.log("displayCountDown: " + data);
-
+        console.log("displayCountDown: ");
+        console.dir(data);
     };
 
-    // Function to display the game timer received from the server.
+    // Function to display the game timer received from the server
     // Data payload is: {"timer": number}
-    WC.Controller.displayTimer = function (data) {
-        //TODO: Need to update the Timer Model
-        console.log("displayTimer: " + data);
+    WC.Controller.displayGameTimer = function (data) {
+        if (data.timer > 0) {
+            WC.Model.GameTimer.display(true);
+        } else {
+            WC.Model.GameTimer.display(false);
+        }
+        WC.Model.GameTimer.value(data.timer);
+
+        console.log("displayGameTimer:");
+        console.dir(data);
+    };
+
+    // Function to display the game letters received from the server
+    // Data payload is: {"letters": array of letters}
+    WC.Controller.displayGameLetters = function (data) {
+        // Allow game letters to display
+        WC.Model.GameLetters.display(true);
+
+        // Clear the list of letters
+        WC.Model.GameLetters.letters([]);
+
+        // Format the letter into a CSS class for the Letter Sprite
+        _.each(data.letters, function (letter) {
+            var letterObj = {
+                letter: "letter-lg wc-lg-" + letter.toUpperCase(),
+            };
+            WC.Model.GameLetters.letters.push(letterObj);
+        });
+
+        console.log("displayGameLetters:");
+        console.dir(data);
     };
 
     // Function to initialize IO connection and setup
@@ -280,14 +339,13 @@ var main = function () {
         client.on("player left", WC.Controller.playerLeft);
 
         // Handle event to display the countdown when everyone said ready
-        // TODO: as of right now the server will start sending countdown after 1
-        // ready
         client.on("countdown", WC.Controller.displayCountDown);
 
         // Handle event to display the game timer when game started
-        // TODO: as of right now the server will start sending countdown after 1
-        // ready
-        client.on("game timer", WC.Controller.displayTimer);
+        client.on("game timer", WC.Controller.displayGameTimer);
+
+        // Handle event to display the game letters when game started
+        client.on("game letters", WC.Controller.displayGameLetters);
 
     };
 

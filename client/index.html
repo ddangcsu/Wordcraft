@@ -63,25 +63,24 @@
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h2 class="pannel-title">Game Board
-                <span class="text-center pull-right">
-                  <span class="number-sm wc-sm-4"></span>
-                  <span class="number-sm wc-sm-0"></span>
+                <span class="text-center pull-right" data-bind="if: GameTimer.display">
+                  <span data-bind="with: GameTimer">
+                    <span data-bind="css: tenth"></span>
+                    <span data-bind="css: digit"></span>
+                  </span>
                 </span>
                 </h2>
               </div>
               <div class="panel-body gameboard">
                 <div class="row">
-                  <div class="letters text-center">
-                    <!-- Place to put the server render letters here -->
-                    <span class="letter-lg wc-lg-A"></span>
-                    <span class="letter-lg wc-lg-B"></span>
-                    <span class="letter-lg wc-lg-C"></span>
-                    <span class="letter-lg wc-lg-D"></span>
-                    <span class="letter-lg wc-lg-E"></span>
-                    <span class="letter-lg wc-lg-F"></span>
-                    <span class="letter-lg wc-lg-G"></span>
-                  </div>  <!-- End of letters DIV -->
-
+                  <div data-bind="if: GameLetters.display">
+                    <div class="letters text-center" data-bind="with: GameLetters">
+                      <!-- Place to put the server render letters here -->
+                      <span data-bind="foreach: letters">
+                        <span data-bind="css: letter"></span>
+                      </span>
+                    </div>  <!-- End of letters DIV -->
+                  </div>
                   <div data-bind="if: CountDown.display">
                     <div class="timers text-center" data-bind="with: CountDown">
                       <!-- Place to put the server render Timer here -->
@@ -129,13 +128,10 @@
                   <p data-bind="text: message, css: type"></p>
                 </div>
                 <div class="panel-footer">
-                  <div class="input-group">
-                    <input type="text" class="form-control" data-bind="value: msgInput">
-                    <span class="input-group-btn">
-                      <button class="btn" data-bind="click: send">Send</button>
-                      <button class="btn" data-bind="click: clear">Clear</button>
-                    </span>
-                  </div>
+                  <input type="text" class="form-control"
+                    data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+                  <button class="btn" data-bind="click: send">Send</button>
+                  <button class="btn" data-bind="click: clear">Clear</button>
                 </div>
               </div>
             </div>

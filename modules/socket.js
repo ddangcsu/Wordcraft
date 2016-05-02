@@ -57,8 +57,8 @@ var sendLetters = function (ioEvent) {
 
     // Return a promise to do things when send Letters completed
     return new Promise(function (resolve) {
-        io.emit(ioEvent, letters);
-        resolve(true);
+        io.emit(ioEvent, {"letters":letters});
+        resolve(letters);
     });
 };
 
@@ -255,11 +255,12 @@ var initServerIO = function (server, mongo, redis) {
                     readyCount = 0;
                     console.log("Reset readyCount to 0");
                     console.log("Send up the letters");
-                    var ioEvent = "game started";
+                    var ioEvent = "game letters";
                     return sendLetters(ioEvent);
                 })
-                .then(function () {
+                .then(function (letters) {
                     console.log("Letters sent to players");
+                    console.log(letters);
                     var ioEvent = "game timer";
                     var gameTime= 20;
                     return countDownTimer(ioEvent, gameTime);
