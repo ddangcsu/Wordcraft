@@ -3,6 +3,7 @@
  undef: true, unused: true, strict: true, trailing: true, node: true */
  "use strict";
 // Create an instance of Socket IO server
+var Promise = require("bluebird");
 var io = require("socket.io")();
 var _ = require("lodash");
 
@@ -10,7 +11,7 @@ var mongoClient = require("mongodb").MongoClient,
     url = "mongodb://localhost:27017/wordcraft",
     db,
     redisClient;
-    
+
 //check if sever is connected
 mongoClient.connect(url, function(err, database) {
     if (err) {
@@ -25,6 +26,43 @@ mongoClient.connect(url, function(err, database) {
 // TODO: We should save the playerList inside a database instead
 // Should think about this
 var playerList = [];
+var readyCount = 0;
+
+// Private function to emit an ioEvent with a count down seconds
+var countDownTimer = function (ioEvent, seconds) {
+    // Return a promise to do things when the countdown completed
+    return new Promise(function (resolve) {
+        var timer = seconds;
+        var countdown = setInterval(function () {
+            // the ioEvent i.e. countdown
+            io.emit(ioEvent, {"timer": timer});
+            console.log(ioEvent + " : " + timer);
+            timer--;
+            if (timer === -1) {
+                clearInterval(countdown);
+                resolve(true);
+            }
+        }, 1000);
+    });
+};
+
+// Private function to send up the letters
+var sendLetters = function (ioEvent) {
+    //TODO: as for now, randomly output 10 letters
+    var vowels = "AEIOU";
+    var consonants = "BCDFGHJKLMNPQRSTVWXYZ";
+
+    var random = _.sampleSize(vowels,2).join("") + _.sampleSize(consonants,6).join("");
+    var letters = _.shuffle(random.split(""));
+
+    // Return a promise to do things when send Letters completed
+    return new Promise(function (resolve) {
+        io.emit(ioEvent, letters);
+        resolve(true);
+    });
+};
+
+// Private function to generate a list of letters
 
 var initServerIO = function (server, mongo, redis) {
     console.log("Initialize the Socket IO server");
@@ -49,7 +87,7 @@ var initServerIO = function (server, mongo, redis) {
             socket.name = payload.from;
             //TODO: We should save the player information into database
             playerList.push({name: socket.name, id: socket.id});
-            
+
             //Save to database
             db.collection("players").insertOne( {
                     "sid": socket.id,
@@ -57,7 +95,7 @@ var initServerIO = function (server, mongo, redis) {
                     //"password": socket.password,
                     "highScore": 0,
                     "gamesPlayed": 0
-                }, 
+                },
                 function(err, result) {
                     if (err) {
                         console.log("Could not save player.");
@@ -67,7 +105,7 @@ var initServerIO = function (server, mongo, redis) {
                     }
                 }
             );
-            
+
             // Add player to game
             // This may be moved somewhere else if we decide to create groups
             // Can add an if statement to limit the number of players in a game
@@ -76,7 +114,7 @@ var initServerIO = function (server, mongo, redis) {
                     "username": socket.name,
                     "currentScore": 0,
                     "wordList": []
-                }, 
+                },
                 function(err, result) {
                     if (err) {
                         console.log("Could not add player to game.");
@@ -155,7 +193,7 @@ var initServerIO = function (server, mongo, redis) {
             // _.find return an object
             //var player = _.find(playerList, {"id": socket.id} );
             _.remove(playerList, player);
-            
+
             // Delete player from current game
             db.collection("game").deleteOne(
                 { "sid": player.id },
@@ -181,6 +219,57 @@ var initServerIO = function (server, mongo, redis) {
             newPayload.players = [player];
             socket.broadcast.emit("player left", newPayload);
             console.dir(playerList);
+        });
+
+        /*
+            This section below is to handle all the games events
+        */
+        // Handle ready event from players
+        socket.on("ready", function (payload) {
+            //TODO:  Code to handle ready events.  This event is use from a
+            // client chat window to indicated that he's ready.  Upon received
+            // server marked the user as ready
+            console.log("A Player is ready");
+            // Just relay the payload message
+            socket.broadcast.emit("ready", payload);
+            //TODO:  These two value should come from the result of a DB query
+            // in order to determine the total players and the total ready
+
+            // Set both to 0 for now to test the ready count down
+            var userCount = playerList.length;
+            readyCount += 1;
+
+            console.log("Total players: " + userCount);
+            console.log("Total ready: " + readyCount);
+
+            // TODO: This is the code to send the seconds to countdown.  If
+            // we want larger countdown value, change the seconds value
+            // Then the server will emit the count down if all are ready
+            if (userCount === readyCount) {
+                var ioEvent = "countdown";
+                var seconds = 5;
+                console.log("Start count down ...");
+                countDownTimer(ioEvent, seconds)
+                .then(function () {
+                    console.log("Then this");
+                    readyCount = 0;
+                    console.log("Reset readyCount to 0");
+                    console.log("Send up the letters");
+                    var ioEvent = "game started";
+                    return sendLetters(ioEvent);
+                })
+                .then(function () {
+                    console.log("Letters sent to players");
+                    var ioEvent = "game timer";
+                    var gameTime= 20;
+                    return countDownTimer(ioEvent, gameTime);
+                })
+                .then(function () {
+                    console.log("Game finished");
+                });
+
+            }
+
         });
 
     });

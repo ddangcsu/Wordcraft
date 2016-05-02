@@ -82,14 +82,15 @@
                     <span class="letter-lg wc-lg-G"></span>
                   </div>  <!-- End of letters DIV -->
 
-                  <div class="timers text-center">
-                    <!-- Place to put the server render Timer here -->
-                    <!-- Below are example count down timer -->
-                    <h3> Get Ready for Count Down </h3>
-                    <span class="number-lg wc-lg-5"></span>
-                    <span class="number-lg wc-lg-5"></span>
-
-                  </div> <!-- End of Timers DIV -->
+                  <div data-bind="if: CountDown.display">
+                    <div class="timers text-center" data-bind="with: CountDown">
+                      <!-- Place to put the server render Timer here -->
+                      <!-- Below are example count down timer -->
+                      <h3> Get Ready !!! </h3>
+                      <span data-bind="css: tenth"></span>
+                      <span data-bind="css: digit"></span>
+                    </div> <!-- End of Timers DIV -->
+                  </div>
                 </div>
               </div>
               <div class="panel-footer text-center">

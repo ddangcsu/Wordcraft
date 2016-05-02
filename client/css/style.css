@@ -31,6 +31,9 @@ body {
     color: red;
 }
 
+.game-msg {
+    color: orange;
+}
 .greeting-msg {
     color: blue;
 }

@@ -115,6 +115,13 @@ var main = function () {
                         self.msgInput("");
                         return;
                     }
+                } else if (cmd[0].toUpperCase() === "/READY") {
+                    // Player send game command ready to server
+                    chatPayload.type = "game";
+                    chatPayload.from = "Game: " + client.name;
+                    chatPayload.to = "";
+                    chatPayload.msg = "is ready";
+
                 } else {
                     // Normal public chat
                     chatPayload.type = "public";
@@ -127,7 +134,11 @@ var main = function () {
                 self.msgInput("");
 
                 // Send the chat message
-                client.emit("send message", chatPayload);
+                if (chatPayload.type !== "game") {
+                    client.emit("send message", chatPayload);
+                } else {
+                    client.emit("ready", chatPayload);
+                }
 
                 // Self add the chat message.  Basically need to convert the
                 // message into the payload the server send
@@ -136,10 +147,8 @@ var main = function () {
                     chatPayload.to = "";
                 } else if (chatPayload.type === "public") {
                     chatPayload.from = "Self";
-                } else {
-                    // TODO: reserve for game specific such as ready check
-                    // and ready command
                 }
+
                 // Tell Controller to display the message
                 WC.Controller.displayMessage(chatPayload);
             }
@@ -152,6 +161,26 @@ var main = function () {
             self.messages([]);
         }
     };
+
+    // Define a model for the countDown timer
+    WC.Model.CountDown = {
+        display: ko.observable(false),
+        value: ko.observable(),
+    };
+
+    // Define two KO computable to show the tenth and the digit
+    WC.Model.CountDown.tenth = ko.computed(function () {
+        var self = this;
+        var tenth = Math.floor(self.value() / 10);
+        return ("number-lg wc-lg-" + tenth);
+    }, WC.Model.CountDown);
+
+    WC.Model.CountDown.digit = ko.computed(function () {
+        var self = this;
+        var digit = self.value() % 10;
+        return ("number-lg wc-lg-" + digit);
+    }, WC.Model.CountDown);
+
 
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
@@ -198,6 +227,28 @@ var main = function () {
         });
     };
 
+    // Function to display the countdown timer received from the server
+    // Data payload is: {"timer": number}
+    WC.Controller.displayCountDown = function (data) {
+        //TODO: Need to update the Countdown Model
+        if (data.timer > 0) {
+            WC.Model.CountDown.display(true);
+        } else {
+            WC.Model.CountDown.display(false);
+        }
+        WC.Model.CountDown.value(data.timer);
+
+        console.log("displayCountDown: " + data);
+
+    };
+
+    // Function to display the game timer received from the server.
+    // Data payload is: {"timer": number}
+    WC.Controller.displayTimer = function (data) {
+        //TODO: Need to update the Timer Model
+        console.log("displayTimer: " + data);
+    };
+
     // Function to initialize IO connection and setup
     WC.Controller.initIO = function () {
         // Initiate SocketIO connection with server
@@ -217,7 +268,7 @@ var main = function () {
         // Common events that will use Display Message which is to write to
         // chat windows only
         // Server greeting, player join game, player leave game, send chat
-        var events = ["hello", "join game", "leave game", "send message"];
+        var events = ["hello", "join game", "leave game", "send message", "ready"];
         _.each(events, function (event) {
             client.on(event, WC.Controller.displayMessage);
         });
@@ -227,6 +278,16 @@ var main = function () {
 
         // Handle event to update the Player List when player left
         client.on("player left", WC.Controller.playerLeft);
+
+        // Handle event to display the countdown when everyone said ready
+        // TODO: as of right now the server will start sending countdown after 1
+        // ready
+        client.on("countdown", WC.Controller.displayCountDown);
+
+        // Handle event to display the game timer when game started
+        // TODO: as of right now the server will start sending countdown after 1
+        // ready
+        client.on("game timer", WC.Controller.displayTimer);
 
     };
 

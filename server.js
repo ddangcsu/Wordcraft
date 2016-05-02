@@ -17,6 +17,10 @@ var parser = require("body-parser");
 // Include redis client
 var rClient = require("./modules/redisDB");
 
+// Include mongoose client.  Exposed a Player model.
+// Access as var newPlayer = new mClient.Player();
+var mClient = require("./modules/mongooseDB");
+
 // Include game dictionary
 var dictionary = require("./modules/dictionary");
 var dictFile = __dirname + "/assets/gamedict.txt";
@@ -54,7 +58,7 @@ app.get("/test", function (req, res) {
 });
 
 // Tell IO to attached to the server
-socketIO.init(server, null, rClient);
+socketIO.init(server, mClient, rClient);
 
 // Tell the server to listen on port 3000
 server.listen(3000);
