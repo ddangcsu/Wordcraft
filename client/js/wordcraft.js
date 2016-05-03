@@ -280,6 +280,7 @@ var main = function () {
             WC.Model.GameTimer.display(true);
         } else {
             WC.Model.GameTimer.display(false);
+            WC.Model.GameLetters.display(false);
         }
         WC.Model.GameTimer.value(data.timer);
 
