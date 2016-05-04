@@ -52,9 +52,26 @@ app.use("/dict", dictionary.checkWord);
 // Setup express to serve static file
 app.use(express.static(__dirname + "/client/"));
 
-// Setup Express route
-app.get("/test", function (req, res) {
-    res.status(200).end("It works");
+// Setup Express route to allow check if game name is unique
+app.get("/checkName/:playerName", function (req, res) {
+    console.log("Checking if a player name is unique on " + req.url);
+    var playerName;
+
+    if (req.params.playerName) {
+
+        playerName = req.params.playerName.trim();
+        mClient.Game.find({name: playerName}).select("name").execAsync()
+        .then(function (exist) {
+            console.log("Result of search " + exist);
+            res.json({valid: (exist) ? false: true });
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+    } else {
+        console.log("Missing name to check");
+        res.status(400).end("Missing name to check");
+    }
 });
 
 // Tell IO to attached to the server
