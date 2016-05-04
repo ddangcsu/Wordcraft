@@ -444,7 +444,7 @@ var initServerIO = function (server, mongo, redis) {
             // Join all the words in payload and find the length of it
             // we add payload.length as a tie breaker so that whoever come up
             // with more words win
-            score = payload.join("").length + payload.length;
+            score = payload.data.join("").length + payload.data.length;
 
             sqlWhere = {id: socket.id};
             sqlUpdate = {
