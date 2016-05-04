@@ -7,29 +7,14 @@ var Promise = require("bluebird");
 var io = require("socket.io")();
 var _ = require("lodash");
 
-var mongoClient = require("mongodb").MongoClient,
-    url = "mongodb://localhost:27017/wordcraft",
-    db,
-    redisClient;
+var mClient;
+var rClient;
 
-//check if sever is connected
-mongoClient.connect(url, function(err, database) {
-    if (err) {
-        console.log("Could not successfully connect to database.");
-    }
-    else {
-        console.log("Connected correctly to server.");
-        db = database;
-    }
-});
-
-// TODO: We should save the playerList inside a database instead
-// Should think about this
-var playerList = [];
-var readyCount = 0;
+var gameInProgress = "wc:inProgress";
+var gameReadyCheck = "wc:readyCheck";
 
 // Private function to emit an ioEvent with a count down seconds
-var countDownTimer = function (ioEvent, seconds) {
+var sendTimer = function (ioEvent, seconds) {
     // Return a promise to do things when the countdown completed
     return new Promise(function (resolve) {
         var timer = seconds;
@@ -63,34 +48,103 @@ var sendLetters = function (ioEvent) {
 };
 
 // Private function to start the game
-var startGame = function (countdown, timer) {
-    var ioEvent = "countdown";
-    console.log("Start count down ...");
-    countDownTimer(ioEvent, countdown)
-    .then(function () {
-        console.log("Then this");
-        readyCount = 0;
-        console.log("Reset readyCount to 0");
-        console.log("Send up the letters");
+var startGame = function (countDownTime, gameAllotTime) {
 
+    // First change the game state from readyCheck to inProgress
+    rClient.renameAsync(gameReadyCheck, gameInProgress)
+    .then(function (result) {
+        // Then if the game state change appropriate start the count down
+        if (result) {
+            console.log("Game Ready State Changed to inProgress: " + result);
+            console.log("Start count down ...");
+            var ioEvent = "countdown";
+            return sendTimer(ioEvent, countDownTime);
+        } else {
+            return Promise.reject(new Error("Unable to change game state"));
+        }
+    })
+    .then(function () {
+        // Then we send up the letters to the client
+        console.log("Send up the letters");
         var ioEvent = "game letters";
         return sendLetters(ioEvent);
     })
     .then(function (letters) {
+        // Then we send up the game timer
         console.log("Letters sent to players");
         console.log(letters);
         var ioEvent = "game timer";
-        return countDownTimer(ioEvent, timer);
+        return sendTimer(ioEvent, gameAllotTime);
     })
     .then(function () {
-        // Send a notification for all client that the game finished
+        // When the timer ended, we send up a time up event to player
         io.emit("game timeup");
         console.log("Game finished");
+    })
+    .catch(function (err) {
+        console.log("Start Game Chain error", err);
     });
 
 };
-// Private function to generate a list of letters
 
+// Private function to handle the game state when a player disconnected
+var handleGameStart = function () {
+
+    // We only need to check if the game is in readyCheck state.
+    rClient.existsAsync(gameReadyCheck)
+    .then(function (exist) {
+        // If exist, we will get our player list
+        if (exist) {
+            console.log("Game is in Ready Check state", exist);
+            return mClient.Game.find().select("name id isReady -_id").execAsync();
+        } else {
+            return Promise.resolve(false);
+        }
+    })
+    .then(function (playerList) {
+        console.log("playerList is: " + playerList);
+        // Then we check the playerList to compare the number of players
+        // and the number of isReady.  If both match we start the game
+        if (playerList) {
+            var userCount = _.size(playerList);
+            var readyCount = _.filter(playerList, {"isReady": true}).length;
+
+            console.log("Total players: " + userCount);
+            console.log("Total ready: " + readyCount);
+
+            // Call GameStart();
+            if (userCount === readyCount) {
+                var countDownTime = 5;
+                var gameTimer = 20;
+                startGame(countDownTime, gameTimer);
+            }
+        }
+        // If nothing to do, we skip
+    })
+    .catch(function (err) {
+        console.log("Error handleGameStart: ", err);
+    });
+
+};
+
+// Private function to initialize game state
+var initializeGame = function () {
+    // We clear a set of storage to set the game state
+    var clearInProgress = rClient.delAsync(gameInProgress);
+    var clearReadyCheck = rClient.delAsync(gameReadyCheck);
+    var clearGameTable = mClient.Game.removeAsync({});
+
+    Promise.all([clearInProgress, clearReadyCheck, clearGameTable])
+    .then(function (result) {
+        console.log("Initialize to clear the game state " + result);
+    })
+    .catch(function (err) {
+        console.log("Error encountered clear state: ", err);
+    });
+
+};
+
+// Main function that will get exports
 var initServerIO = function (server, mongo, redis) {
     console.log("Initialize the Socket IO server");
 
@@ -99,59 +153,35 @@ var initServerIO = function (server, mongo, redis) {
 
     // Save a reference of the mongo and redis client
     // Incase we need to save data
-    mongoClient = mongo;
-    redisClient = redis;
+    mClient = mongo;
+    rClient = redis;
+
+    // Initialize the game state here
+    initializeGame();
 
     // Listen for client connection when a client connect a new socket
     // is created for that client
     io.on("connection", function (socket) {
         console.log("A client has been connected", socket.id);
-        //console.log("Total connected clients: " + _.size(io.sockets.connected));
+
+        // If the game is in progress, disconnect the player.
+        rClient.existsAsync(gameInProgress)
+        .then(function (exist) {
+            // Then if exist, we tell the player that gmae in progress
+            // and disconnect him
+            if (exist) {
+                socket.emit("game in progress");
+                socket.close();
+            }
+        })
+        .catch(function (err) {
+            console.log("Error checking Game Progress Key", err);
+        });
 
         // Handle greeting from client
         // Hello payload contain: type, from, to, msg
         socket.on("hello", function (payload) {
             socket.name = payload.from;
-            //TODO: We should save the player information into database
-            playerList.push({name: socket.name, id: socket.id});
-
-            //Save to database
-            db.collection("players").insertOne( {
-                    "sid": socket.id,
-                    "username": socket.name,
-                    //"password": socket.password,
-                    "highScore": 0,
-                    "gamesPlayed": 0
-                },
-                function(err, result) {
-                    if (err) {
-                        console.log("Could not save player.");
-                    }
-                    else {
-                        console.log("Inserted a player into the players collection.");
-                    }
-                }
-            );
-
-            // Add player to game
-            // This may be moved somewhere else if we decide to create groups
-            // Can add an if statement to limit the number of players in a game
-            db.collection("game").insertOne( {
-                    "sid": socket.id,
-                    "username": socket.name,
-                    "currentScore": 0,
-                    "wordList": []
-                },
-                function(err, result) {
-                    if (err) {
-                        console.log("Could not add player to game.");
-                    }
-                    else {
-                        console.log("Inserted a player into the game collection.");
-                    }
-                }
-            );
-
             console.log(payload.type + ": <" + socket.name + "> says " + payload.msg);
 
             // Send a greeting back to client
@@ -164,18 +194,45 @@ var initServerIO = function (server, mongo, redis) {
             socket.emit("hello", newPayload);
             console.log("Greet user: " + socket.name);
 
-            // Craft a new payload to notify all users that a new player joined
-            newPayload = {};
-            newPayload.type = "system";
-            newPayload.from = "Server";
-            newPayload.to = "";
-            newPayload.msg = socket.name + " has joined the game";
-            io.emit("join game", newPayload);
-            console.log(socket.name + " has joined the game");
-            // Craft another payload to send just the list of players
-            newPayload = {};
-            newPayload.players = playerList;
-            io.emit("player joined", newPayload);
+            // Save the player into the Games table
+            var newPlayer = mClient.Game({
+                name: socket.name,
+                id: socket.id,
+                isReady: false,
+                hasResult: false,
+                score: 0,
+                wordList: []
+            });
+
+            newPlayer.saveAsync()
+            .then(function (result) {
+                // Then we get a list of players back
+                console.log("Add new player to Game table " + result);
+                // Query all players in Game for name, id
+                return mClient.Game.find().select("name id -_id").execAsync();
+            })
+            .then(function (playerList) {
+                // Then we notify the rest of the players that a new player
+                // joined and provide a new full list of players
+                console.log("Search result is: ", playerList);
+                // Craft a new payload to notify all users that a new player joined
+                newPayload = {};
+                newPayload.type = "system";
+                newPayload.from = "Server";
+                newPayload.to = "";
+                newPayload.msg = socket.name + " has joined the game";
+                io.emit("join game", newPayload);
+                console.log(socket.name + " has joined the game");
+                
+                // Craft another payload to send just the list of players
+                newPayload = {};
+                newPayload.players = playerList;
+                io.emit("player joined", newPayload);
+
+            })
+            .catch(function (err) {
+                console.log("Unable to add player", err);
+            });
 
         });
 
@@ -215,38 +272,30 @@ var initServerIO = function (server, mongo, redis) {
                 id: socket.id
             };
 
-            // TODO: This removal of players should be from database
-            // Get the user that has id match with client.id
-            // _.find return an object
-            //var player = _.find(playerList, {"id": socket.id} );
-            _.remove(playerList, player);
-
             // Delete player from current game
-            db.collection("game").deleteOne(
-                { "sid": player.id },
-                function(err, results) {
-                    if (err) {
-                        console.log("Delete unsuccessful.");
-                    }
-                    else {
-                        console.log("Player was removed from game.");
-                        console.dir(results);
-                    }
-                }
-            );
+            mClient.Game.remove({id: socket.id}).execAsync()
+            .then(function (result) {
+                console.log("Remove player" + result);
 
-            // Broadcast event player has left
-            newPayload.type = "system";
-            newPayload.from = "Server";
-            newPayload.to = "";
-            newPayload.msg = socket.name + " left the game";
-            socket.broadcast.emit("leave game", newPayload);
+                // Broadcast event player has left
+                newPayload.type = "system";
+                newPayload.from = "Server";
+                newPayload.to = "";
+                newPayload.msg = socket.name + " left the game";
+                socket.broadcast.emit("leave game", newPayload);
 
-            // Separate message to tell client to update the list of player
-            newPayload = {};
-            newPayload.players = [player];
-            socket.broadcast.emit("player left", newPayload);
-            console.dir(playerList);
+                // Separate message to tell client to update the list of player
+                newPayload = {};
+                newPayload.players = [player];
+                socket.broadcast.emit("player left", newPayload);
+
+                //Handle game when a player Disconnect
+                handleGameStart();
+            })
+            .catch(function (err) {
+                console.log("Unable to remove player", err);
+            });
+
         });
 
         /*
@@ -254,30 +303,38 @@ var initServerIO = function (server, mongo, redis) {
         */
         // Handle ready event from players
         socket.on("ready", function (payload) {
-            //TODO:  Code to handle ready events.  This event is use from a
-            // client chat window to indicated that he's ready.  Upon received
-            // server marked the user as ready
-            console.log("A Player is ready");
-            // Just relay the payload message
-            socket.broadcast.emit("ready", payload);
-            //TODO:  These two value should come from the result of a DB query
-            // in order to determine the total players and the total ready
+            // first check if game Ready Check flag is in redis
+            rClient.existsAsync(gameReadyCheck)
+            .then(function (exist) {
+                if (! exist) {
+                    // If not exist, set it
+                    return rClient.setAsync(gameReadyCheck, true);
+                } else {
+                    return Promise.resolve(true);
+                }
+            })
+            .then(function () {
+                // Then we update the isReady flag for the player to true
+                // in Mongo db
+                var sqlWhere = {id: socket.id};
+                var sqlUpdate = {$set: {isReady: true}};
+                return mClient.Game.findOneAndUpdateAsync(sqlWhere, sqlUpdate);
+            })
+            .then(function(result) {
+                // Then we relay the ready event to all others to notify that
+                // the player is ready.
+                console.log("Marked the player ready in the game table", result);
+                // Just relay the payload message
+                socket.broadcast.emit("ready", payload);
 
-            // Set both to 0 for now to test the ready count down
-            var userCount = playerList.length;
-            readyCount += 1;
+                // Then we check if we can start the game
+                handleGameStart();
+            })
+            .catch(function (err) {
+                console.log("Error Handle socket ready event: ", err);
+            });
 
-            console.log("Total players: " + userCount);
-            console.log("Total ready: " + readyCount);
-
-            // Call GameStart();
-            if (userCount === readyCount) {
-                var countDownTime = 5;
-                var gameTimer = 20;
-                startGame(countDownTime, gameTimer);
-            }
-
-        });
+        }); // End of handling "ready" event
 
         // Handle event game results
         socket.on("game result", function (payload) {

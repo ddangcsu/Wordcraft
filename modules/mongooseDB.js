@@ -27,18 +27,18 @@ var PlayerSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    hiScore: Number,
-    gamePlayed: Number
+    highScore: Number,
+    gamesPlayed: Number
 });
 
 var GameSchema = mongoose.Schema({
     // The following stuff are updated per session that the player play
-    username: {
+    name: {
         type: String,
         unique: true,
         require: true
     },
-    socketId: {
+    id: {
         type: String,
         unique: true,
         require: true
