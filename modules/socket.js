@@ -162,8 +162,6 @@ var initServerIO = function (server, mongo, redis) {
     // Listen for client connection when a client connect a new socket
     // is created for that client
     io.on("connection", function (socket) {
-        console.log("A client has been connected", socket.id);
-
         // If the game is in progress, disconnect the player.
         rClient.existsAsync(gameInProgress)
         .then(function (exist) {
@@ -171,7 +169,9 @@ var initServerIO = function (server, mongo, redis) {
             // and disconnect him
             if (exist) {
                 socket.emit("game in progress");
-                socket.close();
+                socket.disconnect();
+            } else {
+                console.log("A client has been connected", socket.id);
             }
         })
         .catch(function (err) {
@@ -223,7 +223,7 @@ var initServerIO = function (server, mongo, redis) {
                 newPayload.msg = socket.name + " has joined the game";
                 io.emit("join game", newPayload);
                 console.log(socket.name + " has joined the game");
-                
+
                 // Craft another payload to send just the list of players
                 newPayload = {};
                 newPayload.players = playerList;
@@ -264,37 +264,44 @@ var initServerIO = function (server, mongo, redis) {
 
         // Show when a client disconnected
         socket.on("disconnect", function () {
-            console.log("A client has disconnected " + socket.id);
-            //console.log("Total connected clients: " + _.size(io.sockets.connected));
-            var newPayload = {};
-            var player = {
-                name: socket.name,
-                id: socket.id
-            };
+            if (socket.hasOwnProperty("name")) {
+                console.log("A client has disconnected " + socket.id);
+                //console.log("Total connected clients: " + _.size(io.sockets.connected));
+                var newPayload = {};
+                var player = {
+                    name: socket.name,
+                    id: socket.id
+                };
 
-            // Delete player from current game
-            mClient.Game.remove({id: socket.id}).execAsync()
-            .then(function (result) {
-                console.log("Remove player" + result);
+                // Delete player from current game
+                mClient.Game.remove({id: socket.id}).execAsync()
+                .then(function (result) {
+                    console.log("Remove player" + result);
 
-                // Broadcast event player has left
-                newPayload.type = "system";
-                newPayload.from = "Server";
-                newPayload.to = "";
-                newPayload.msg = socket.name + " left the game";
-                socket.broadcast.emit("leave game", newPayload);
+                    // Broadcast event player has left
+                    newPayload.type = "system";
+                    newPayload.from = "Server";
+                    newPayload.to = "";
+                    newPayload.msg = socket.name + " left the game";
+                    socket.broadcast.emit("leave game", newPayload);
 
-                // Separate message to tell client to update the list of player
-                newPayload = {};
-                newPayload.players = [player];
-                socket.broadcast.emit("player left", newPayload);
+                    // Separate message to tell client to update the list of player
+                    newPayload = {};
+                    newPayload.players = [player];
+                    socket.broadcast.emit("player left", newPayload);
 
-                //Handle game when a player Disconnect
-                handleGameStart();
-            })
-            .catch(function (err) {
-                console.log("Unable to remove player", err);
-            });
+                    //Handle game when a player Disconnect
+                    handleGameStart();
+                })
+                .catch(function (err) {
+                    console.log("Unable to remove player", err);
+                });
+
+            } else {
+                // If a player does not have a name attached to the socket
+                // it means the player was never officially join the game
+                console.log("Disconnect player who join while game in progresss");
+            }
 
         });
 
