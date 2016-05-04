@@ -18,10 +18,6 @@ mongoose.connection.once("open", function () {
 
 // This is our mongoose model for todos
 var PlayerSchema = mongoose.Schema({
-    name: {
-        type: String,
-        require: true
-    },
     username: {
         type: String,
         unique: true,
@@ -31,17 +27,30 @@ var PlayerSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    // The following stuff are updated per session that the player play
-    socketId: String,
-    ready: Boolean,
-    done: Boolean,
-    wordList: [ String ],
     hiScore: Number,
-    currentScore: Number,
-    gamePlayed: Number,
+    gamePlayed: Number
+});
+
+var GameSchema = mongoose.Schema({
+    // The following stuff are updated per session that the player play
+    username: {
+        type: String,
+        unique: true,
+        require: true
+    },
+    socketId: {
+        type: String,
+        unique: true,
+        require: true
+    },
+    isReady: Boolean,
+    hasResult: Boolean,
+    score: Number,
+    wordList: [ String ]
 });
 
 var Player = mongoose.model("Player", PlayerSchema);
-
+var Game = mongoose.model("Game", GameSchema);
 
 module.exports.Player = Player;
+module.exports.Game = Game;
