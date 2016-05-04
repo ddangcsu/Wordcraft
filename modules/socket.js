@@ -129,7 +129,7 @@ var handleGameStart = function () {
 
 // Private function to handle the game result
 var handleGameResult = function () {
-    // We only need to check if the game is in readyCheck state.
+    // We only need to check if the game is in Progress state.
     rClient.existsAsync(gameInProgress)
     .then(function (exist) {
         // If exist, we will get our player list
@@ -370,8 +370,10 @@ var initServerIO = function (server, mongo, redis) {
                     newPayload.players = [player];
                     socket.broadcast.emit("player left", newPayload);
 
-                    //Handle game when a player Disconnect
+                    // Handle game when a player Disconnect
                     handleGameStart();
+                    // Handle game result when a player Disconnect
+                    handleGameResult();
                 })
                 .catch(function (err) {
                     console.log("Unable to remove player", err);
