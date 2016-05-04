@@ -102,10 +102,10 @@ var handleGameStart = function () {
         }
     })
     .then(function (playerList) {
-        console.log("playerList is: " + playerList);
         // Then we check the playerList to compare the number of players
         // and the number of isReady.  If both match we start the game
         if (playerList) {
+            console.log("playerList is: " + playerList);
             var userCount = _.size(playerList);
             var readyCount = _.filter(playerList, {"isReady": true}).length;
 
@@ -137,14 +137,14 @@ var handleGameResult = function () {
             console.log("Game is in Progress state", exist);
             return mClient.Game.find().select("-_id -__v").execAsync();
         } else {
-            return Promise.reject(new Error("inProgress Game flag is not set"));
+            return Promise.resolve(false);
         }
     })
     .then(function (playerList) {
-        console.log("playerList is: " + playerList);
         // Then we check the playerList to compare the number of players
         // and the number of isReady.  If both match we start the game
         if (playerList) {
+            console.log("playerList is: " + playerList);
             var userCount = _.size(playerList);
             var resultCount = _.filter(playerList, {"hasResult": true}).length;
 
