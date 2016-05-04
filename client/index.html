@@ -93,9 +93,11 @@
                 </div>
               </div>
               <div class="panel-footer text-center">
-                <!-- This is where the user can type in there input -->
-                <input class="form-control" data-bind="textInput: wordInput, event: {keypress: onEnter }">
-                <button data-bind="click: addWord">Submit</button>
+                <div data-bind="with: WordList">
+                    <!-- This is where the user can type in there input -->
+                    <input class="form-control" data-bind="textInput: wordInput">
+                    <button data-bind="click: addWord">Submit</button>
+                </div>
               </div>
             </div>
 
