@@ -60,10 +60,10 @@ app.get("/checkName/:playerName", function (req, res) {
     if (req.params.playerName) {
 
         playerName = req.params.playerName.trim();
-        mClient.Game.find({name: playerName}).select("name").execAsync()
+        mClient.Game.findOne({name: playerName}).select("name").execAsync()
         .then(function (exist) {
             console.log("Result of search " + exist);
-            res.json({valid: (exist) ? false: true });
+            res.json({isUnique: (exist) ? false: true });
         })
         .catch(function (err) {
             console.log(err);
