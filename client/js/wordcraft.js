@@ -318,6 +318,23 @@ var main = function () {
         client.emit("game result", data);
     };
 
+    // Function to display the game scores received from the game result event
+    // from server.
+    WC.Controller.displayGameScores = function (payload) {
+        // TODO: Code to display game scores from payload
+        // Payload is an array of player objects in the form of:
+        // {name, score, wordListArray}
+        // Score are shorted with highest to lowest
+        console.log("Server game result payload", payload);
+    };
+
+    // Function to display message that game in progress and user need to join
+    // later
+    WC.Controller.handleGameInProgress = function () {
+        // TODO: Code to handle display message/dialog to user
+
+    };
+
     // Function to initialize IO connection and setup
     WC.Controller.initIO = function () {
         // Initiate SocketIO connection with server
@@ -359,6 +376,13 @@ var main = function () {
 
         // Handle event to send player list to to the server.
         client.on("game timeup", WC.Controller.sendListWordsToServer);
+
+        // Handle event when game is in progress to display message to newPlayer
+        // that game is in progress and cannot join the game
+        client.on("game in progress", WC.Controller.handleGameInProgress);
+
+        // Handle event game result to display the final score of all player
+        client.on("game result", WC.Controller.displayGameScores);
 
     };
 

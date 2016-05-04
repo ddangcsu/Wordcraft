@@ -127,6 +127,86 @@ var handleGameStart = function () {
 
 };
 
+// Private function to handle the game result
+var handleGameResult = function () {
+    // We only need to check if the game is in readyCheck state.
+    rClient.existsAsync(gameInProgress)
+    .then(function (exist) {
+        // If exist, we will get our player list
+        if (exist) {
+            console.log("Game is in Progress state", exist);
+            return mClient.Game.find().select("-_id -__v").execAsync();
+        } else {
+            return Promise.reject(new Error("inProgress Game flag is not set"));
+        }
+    })
+    .then(function (playerList) {
+        console.log("playerList is: " + playerList);
+        // Then we check the playerList to compare the number of players
+        // and the number of isReady.  If both match we start the game
+        if (playerList) {
+            var userCount = _.size(playerList);
+            var resultCount = _.filter(playerList, {"hasResult": true}).length;
+
+            console.log("Total players: " + userCount);
+            console.log("Total results: " + resultCount);
+
+            // Send up the game result
+            if (userCount === resultCount) {
+                // We map the playerList result to a payload
+                // We order the players with the highest score first
+                var sortedPlayer = _.orderBy(playerList, "score", "desc");
+
+                // Then we map it to payload so that we only pick out the fields
+                // we want
+                var payload = _.map(sortedPlayer, function (player) {
+                    return {
+                        name: player.name,
+                        score: player.score,
+                        wordList: player.wordList
+                    };
+                });
+
+                // Then we send up the payload to client
+                var ioEvent = "game result";
+                io.emit(ioEvent, payload);
+
+                // Then we clear the game state as well as reset player stats
+                return Promise.resolve(true);
+            }
+        }
+        return Promise.resolve(false);
+    })
+    .then(function (status) {
+        // If we need to reset game state and reset players
+        if (status) {
+            // We clear a set of storage to set the game state
+            var clearInProgress = rClient.delAsync(gameInProgress);
+            var clearReadyCheck = rClient.delAsync(gameReadyCheck);
+
+            var sqlUpdate = {
+                $set: {
+                    isReady: false,
+                    hasResult: false,
+                    wordList: []
+                }
+            };
+            var resetPlayerStats = mClient.Game.updateAsync({}, sqlUpdate, {multi: true});
+
+            Promise.all([clearInProgress, clearReadyCheck, resetPlayerStats])
+            .then(function (result) {
+                console.log("Clear Game State after sending game score " + result);
+            })
+            .catch(function (err) {
+                console.log("Error encountered handle result: ", err);
+            });
+        }
+    })
+    .catch(function (err) {
+        console.log("Error handleGameResult: ", err);
+    });
+};
+
 // Private function to initialize game state
 var initializeGame = function () {
     // We clear a set of storage to set the game state
@@ -343,7 +423,7 @@ var initServerIO = function (server, mongo, redis) {
 
         }); // End of handling "ready" event
 
-        // Handle event game results
+        // Handle event game results.  Expect payload as an array of words
         socket.on("game result", function (payload) {
             // TODO: Code need here to:
             // 1.  Compute the score according to each player payload
@@ -351,12 +431,41 @@ var initServerIO = function (server, mongo, redis) {
             // 3.  When server received all result from all players
             //     and all score has been computed.  Then send all the result
             //     up to all clients
+            var score,
+                sqlWhere,
+                sqlUpdate;
 
             console.log("Game Result fired for ", socket.name);
             console.dir(payload);
+
+            // Compute the score for each player as we receive the payload
+            // Join all the words in payload and find the length of it
+            // we add payload.length as a tie breaker so that whoever come up
+            // with more words win
+            score = payload.join("").length + payload.length;
+
+            sqlWhere = {id: socket.id};
+            sqlUpdate = {
+                $set: {
+                    hasResult: true,
+                    score: score,
+                    wordList: payload,
+                }
+            };
+            // We update the game table with the score/wordlist and flag it
+            mClient.Game.findOneAndUpdateAsync(sqlWhere, sqlUpdate)
+            .then(function (result) {
+                // Once updated, we need to see if we can send up the score
+                console.log("Update result " + result);
+                handleGameResult();
+            })
+            .catch(function (err) {
+                console.log("Error in Game Result event: ", err);
+            });
+
         });
 
-    });
+    }); // End of Socket IO events
 
     console.log("Finished setup the Socket IO server");
 };
