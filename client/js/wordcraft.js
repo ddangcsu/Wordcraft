@@ -79,10 +79,20 @@ var main = function () {
         addWord: function () {
             var self = this;
             if (self.wordInput() !== "") {
+                // add a check for dictionary
                 self.words.push({ word: self.wordInput() });
                 // Clear the word input box
                 self.wordInput("");
             }
+        },
+        // Add word when enter key is pressed
+        onEnterKey: function (data, event) {
+            var self = this;
+            if (event.keyCode === 13) {
+                self.addWord();
+                return false;
+            }
+            return true;
         }
     };
 

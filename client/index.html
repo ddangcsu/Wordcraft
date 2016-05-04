@@ -92,11 +92,16 @@
                   </div>
                 </div>
               </div>
-              <div class="panel-footer text-center">
+              <div class="panel-footer text-center" data-bind="if: GameTimer.display">
                 <div data-bind="with: WordList">
                     <!-- This is where the user can type in there input -->
-                    <input class="form-control" data-bind="textInput: wordInput">
+                    <input class="form-control" data-bind="textInput: wordInput, event: {keypress: onEnterKey}">
                     <button data-bind="click: addWord">Submit</button>
+                    
+                    <!-- for testing purposes only -->
+                    <ul data-bind="foreach: words">
+                        <p data-bind="text: word"></p>
+                    </ul>
                 </div>
               </div>
             </div>
