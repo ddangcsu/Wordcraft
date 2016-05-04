@@ -67,6 +67,24 @@ var main = function () {
             });
         }
     };
+    
+    // Define a WordList Model that contains an array of observable Words for the player
+    WC.Model.WordList = {
+        // Track a list of words entered
+        words: ko.observableArray(),
+        
+        // Current word to add
+        wordInput: ko.observable(),
+        
+        addWord: function () {
+            var self = this;
+            if (self.wordInput() !== "") {
+                self.words.push({ word: self.wordInput() });
+                // Clear the word input box
+                self.wordInput("");
+            }
+        }
+    };
 
     // Define a function to model a chat message
     WC.Model.Message = function (msg) {
