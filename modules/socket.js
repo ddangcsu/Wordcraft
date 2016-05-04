@@ -62,6 +62,33 @@ var sendLetters = function (ioEvent) {
     });
 };
 
+// Private function to start the game
+var startGame = function (countdown, timer) {
+    var ioEvent = "countdown";
+    console.log("Start count down ...");
+    countDownTimer(ioEvent, countdown)
+    .then(function () {
+        console.log("Then this");
+        readyCount = 0;
+        console.log("Reset readyCount to 0");
+        console.log("Send up the letters");
+
+        var ioEvent = "game letters";
+        return sendLetters(ioEvent);
+    })
+    .then(function (letters) {
+        console.log("Letters sent to players");
+        console.log(letters);
+        var ioEvent = "game timer";
+        return countDownTimer(ioEvent, timer);
+    })
+    .then(function () {
+        // Send a notification for all client that the game finished
+        io.emit("game timeup");
+        console.log("Game finished");
+    });
+
+};
 // Private function to generate a list of letters
 
 var initServerIO = function (server, mongo, redis) {
@@ -203,6 +230,7 @@ var initServerIO = function (server, mongo, redis) {
                     }
                     else {
                         console.log("Player was removed from game.");
+                        console.dir(results);
                     }
                 }
             );
@@ -242,35 +270,26 @@ var initServerIO = function (server, mongo, redis) {
             console.log("Total players: " + userCount);
             console.log("Total ready: " + readyCount);
 
-            // TODO: This is the code to send the seconds to countdown.  If
-            // we want larger countdown value, change the seconds value
-            // Then the server will emit the count down if all are ready
+            // Call GameStart();
             if (userCount === readyCount) {
-                var ioEvent = "countdown";
-                var seconds = 5;
-                console.log("Start count down ...");
-                countDownTimer(ioEvent, seconds)
-                .then(function () {
-                    console.log("Then this");
-                    readyCount = 0;
-                    console.log("Reset readyCount to 0");
-                    console.log("Send up the letters");
-                    var ioEvent = "game letters";
-                    return sendLetters(ioEvent);
-                })
-                .then(function (letters) {
-                    console.log("Letters sent to players");
-                    console.log(letters);
-                    var ioEvent = "game timer";
-                    var gameTime= 20;
-                    return countDownTimer(ioEvent, gameTime);
-                })
-                .then(function () {
-                    console.log("Game finished");
-                });
-
+                var countDownTime = 5;
+                var gameTimer = 20;
+                startGame(countDownTime, gameTimer);
             }
 
+        });
+
+        // Handle event game results
+        socket.on("game result", function (payload) {
+            // TODO: Code need here to:
+            // 1.  Compute the score according to each player payload
+            // 2.  Store the word lists and the score of each player
+            // 3.  When server received all result from all players
+            //     and all score has been computed.  Then send all the result
+            //     up to all clients
+
+            console.log("Game Result fired for ", socket.name);
+            console.dir(payload);
         });
 
     });
