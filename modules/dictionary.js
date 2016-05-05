@@ -51,7 +51,8 @@ var loadDict = function() {
         .then (function (fileContent) {
             // Turn the file content into an array of words
             // split by the new line
-            var words = fileContent.toString().split("\n");
+
+            var words = fileContent.toString().replace(/\\r/g, "").split("\n");
             // We load all the words into redis
             console.log("Adding words into redis");
             return client.saddAsync(key, words);
