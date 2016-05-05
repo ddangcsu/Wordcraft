@@ -451,7 +451,7 @@ var initServerIO = function (server, mongo, redis) {
                 $set: {
                     hasResult: true,
                     score: score,
-                    wordList: payload,
+                    wordList: payload.data,
                 }
             };
             // We update the game table with the score/wordlist and flag it
