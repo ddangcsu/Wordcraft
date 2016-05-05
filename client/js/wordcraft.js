@@ -93,13 +93,32 @@ var main = function () {
             }
         },
         // Add word when enter key is pressed
-        onEnterKey: function (data, event) {
+        onKeyPress: function (data, event) {
             var self = this;
+            if(event.keyCode === WC.Model.GameLetters.letters()[0].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[1].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[2].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[3].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[4].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[5].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[6].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[7].eU.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[0].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[1].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[2].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[3].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[4].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[5].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[6].eL.charCodeAt(0)
+            || event.keyCode === WC.Model.GameLetters.letters()[7].eL.charCodeAt(0)) {
+                return true;
+            }
+            // If the enter key was pressed, addWord
             if (event.keyCode === 13) {
                 self.addWord();
                 return false;
             }
-            return true;
+            return false;
         },
         // Reset the word list after sending to server
         resetList: function () {
@@ -343,7 +362,8 @@ var main = function () {
         _.each(data.letters, function (letter) {
             var letterObj = {
                 letter: "letter-lg wc-lg-" + letter.toUpperCase(),
-                e: letter.toUpperCase()
+                eU: letter.toUpperCase(),
+                eL: letter.toLowerCase()
             };
             WC.Model.GameLetters.letters.push(letterObj);
         });
