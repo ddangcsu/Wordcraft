@@ -52,7 +52,9 @@ var loadDict = function() {
             // Turn the file content into an array of words
             // split by the new line
 
-            var words = fileContent.toString().replace(/\\r/g, "").split("\n");
+            // Stripping out the line break and replace it with a space.
+            // http://texthandler.com/?module=remove_line_breaks_javascript
+            var words = fileContent.toString().replace(/(\r\n|\n|\r)/gm, " ").split(" ");
             // We load all the words into redis
             console.log("Adding words into redis");
             return client.saddAsync(key, words);
