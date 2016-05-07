@@ -1,0 +1,88 @@
+/* general styles */
+html, body {
+  height: 100%;
+  width: 100%;
+}
+ 
+/* padded section */
+.pad-section {
+  padding: 50px 0;
+}
+
+#customNavBar {
+  color:red;
+}
+
+#greetMsg {
+  color:white;
+  font-size: 4.5em;
+}
+
+.pad-section img {
+  width: 250px;
+  height:300px;
+}
+ 
+/* vertical-centered text */
+.text-vcenter {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.text-vcenter h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+ 
+/* additional sections */
+
+#home {
+  padding-top:150px;
+  background: url(../assets/original.jpg) no-repeat center center fixed;
+  display: table;
+  height: 100%;
+  position: relative;
+  width: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#aboutGame {
+
+}
+#gameRules {
+  background: url(../assets/original.jpg) no-repeat center center fixed;
+  display: table;
+  height: 800px;
+  position: relative;
+  width: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#gameRules .panel {
+  opacity: 0.85;
+}
+
+#gameMsg{
+  color:white;
+  padding-bottom:10px;
+  font-size:large;
+}
+
+#playButton{
+  background-color: #306d9f;
+  color:white;
+}
+
+footer {
+  padding: 20px 0;
+}
+
