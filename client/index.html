@@ -7,12 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link id="favicon" href="favicon.ico" rel="icon" type="image/x-icon">
+    <!-- Reset default stylesheets -->
+    <link href="css/reset.css" rel="stylesheet" type="text/css">
     <!--Bootstarp Libraries -->
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap-theme.min.css" type="text/css">
-   
-    <!-- Reset default stylesheets -->
-    <link href="css/reset.css" rel="stylesheet" type="text/css">
     <!-- Project related styles-->
     <link rel="stylesheet" href="/css/lettersprite.css" type="text/css">
     <link rel="stylesheet" href="/css/numbersprite.css" type="text/css">
@@ -37,7 +36,7 @@
             </button>
             <a class="navbar-brand" href="#">WordCraft</a>
           </div>
-          
+
           <div class="collapse navbar-collapse" id="navbar-collapse-main">
             <ul class="nav navbar-nav navbar-right">
               <li><a href="#home">Home</a></li>
@@ -50,16 +49,16 @@
       </nav>
       <!-- /navigation bar-->
     </header>
-    
+    <div id="landing-page-sections">
     <!-- first section - Home -->
     <div id="home" class="home">
-      <div class="text-vcenter" id="greetMsg"> 
+      <div class="text-vcenter" id="greetMsg">
         <h1>Hello Players</h1>
         <h2>Welcome to WordCraft</h2>
       </div>
     </div>
     <!-- /first section -->
-    
+
     <!-- second section - AboutGame -->
     <div id="aboutGame" class="pad-section">
       <div class="container">
@@ -75,7 +74,7 @@
       </div>
     </div>
     <!-- /second section -->
-    
+
     <!-- third section - Game Rules -->
     <div id="gameRules" class="pad-section">
       <div class="container">
@@ -88,7 +87,7 @@
               <div class="panel-body lead" id="customRules">
                 <ul>
                   <li>You can reuse the given letters</li>
-                  <li>Words must be a valid one</li>                    
+                  <li>Words must be a valid one</li>
                     <li>Do not repeat words</li>
                   <li>Game doesnot accept single letters</li>
                   </ul>
@@ -115,7 +114,7 @@
       </div>
     </div>
     <!-- /third section -->
-    
+
     <!-- fourth section -->
     <div id="playButton" class="pad-section">
       <div class="container">
@@ -124,7 +123,7 @@
             <h3>Now its time to play!</h3>
             <h4>Enjoy our WordCraft Game</h4>
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">GameRoom</button>
-            
+
             <!-- Modal -->
               <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-sm">
@@ -133,11 +132,11 @@
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                       <h4 class="modal-title" id="modalTitle">Enter WordCraft GameRoom!</h4>
                     </div>
-                    
+
                     <!-- Modal Body -->
                     <div class="modal-body">
                       <!-- Modal Form -->
-                      <form id="userForm" method="post" class="form-horizontal">
+                      <div id="userForm" class="form-horizontal">
                         <div class="form-group">
                           <label class="col-xs-3 control-label"></label>
                           <div class="col-xs-5">
@@ -146,11 +145,11 @@
                         </div>
                         <div class="form-group">
                           <div class="col-xs-5 col-xs-offset-3">
-                            <button type="submit" class="btn btn-primary">Enter</button>
+                            <button id= "enter-game-room" type="submit" data-dismiss="modal" class="btn btn-primary">Enter</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                           </div>
                         </div>
-                      </form>
+                    </div>
                       <!-- /Modal Form -->
                     </div>
                     <!-- /Modal Body -->
@@ -165,8 +164,9 @@
         </div>
       </div>
       <!-- /fourth section -->
+  </div>
 
-      
+
       <main>
         <div class="container-fluid">
           <div class="row">
@@ -208,17 +208,23 @@
                     <!-- This is where the user can type in there input -->
                     <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
                     <button data-bind="click: addWord">Submit</button>
-                    
+
                     <!-- for testing purposes only -->
                     <ul data-bind="foreach: words">
                       <p data-bind="text: word"></p>
                     </ul>
                   </div>
                 </div>
+                <!--Dispaly Result-->
+                <div class="panel-footer text-center" data-bind="if: GameResults.display">
+                  <div data-bind="with: GameResults">
+
+                  </div>
+                </div>
             </div>
-              
+
             </div> <!-- End Game board column -->
-            
+
           <!-- Right column to hold chat and player list-->
           <div class="col-sm-3 col-md-3 col-lg-3">
             <!-- Begin row to hold the game room -->
@@ -263,7 +269,7 @@
         <!-- Dynamically attached modal and remove it here -->
         <!-- Location to store code for modal -->
       </section>
-      
+
       <!-- footer -->
       <footer>
        <!-- <hr />-->

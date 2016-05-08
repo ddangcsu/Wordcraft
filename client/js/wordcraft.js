@@ -5,6 +5,15 @@ undef: true, unused: true, strict: true, trailing: true */
 /* global console: true, io: true, ko: true, _: true */
 var main = function () {
     "use strict";
+    $("main").hide();
+
+    //view main page
+    $("#enter-game-room").on("click", function(){
+        console.log("hi");
+        $("#landing-page-sections").hide();
+        $("main").show();
+
+    });
 
     // WordCraft namespace
     var WC = {
@@ -67,19 +76,19 @@ var main = function () {
             });
         }
     };
-    
+
     // Define a WordList Model that contains an array of observable Words for the player
     WC.Model.WordList = {
         // Track a list of valid words entered
         words: ko.observableArray(),
         // Current word to add
         wordInput: ko.observable(),
-        
+
         addWord: function () {
             var self = this;
             var wordInput = self.wordInput();
             if (wordInput !== "") {
-                
+
                 // Check validity and add to words list
                 $.get("dict/" + wordInput, function(result) {
                     console.log(result);
@@ -87,7 +96,7 @@ var main = function () {
                         self.words.push({ word: wordInput });
                     }
                 });
-                
+
                 // Clear the word input box
                 self.wordInput("");
             }
@@ -274,6 +283,18 @@ var main = function () {
         display: ko.observable(false),
         letters: ko.observableArray(),
     };
+    //Define a modal for game result
+    WC.Model.GameResults = {
+        playersResults: ko.observableArray([]),
+        display: ko.observable(false),
+        setArray: function(resultsArray){
+            resultsArray.forEach(function (result){
+                playersResults.push(result);
+                //sort palyer scores
+                //_.sort(playersResults, "result");
+            });
+        }
+    };
 
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
@@ -390,6 +411,8 @@ var main = function () {
     // Function to display the game scores received from the game result event
     // from server.
     WC.Controller.displayGameScores = function (payload) {
+        WC.Model.GameResults.display(true);
+        WC.Model.GameResults.setArray(payload);
         // TODO: Code to display game scores from payload
         // Payload is an array of player objects in the form of:
         // {name, score, wordListArray}
@@ -460,6 +483,9 @@ var main = function () {
 
     // Initialize Socket IO Connection and events handling
     WC.Controller.initIO();
+
+
+
 
 
 };
