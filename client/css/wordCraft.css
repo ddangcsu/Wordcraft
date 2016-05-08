@@ -15,11 +15,12 @@ html, body {
 
 #greetMsg {
   color:white;
-  font-size: 4.5em;
+  font-size: 1.5em;
+  padding-bottom:2%;
 }
 
 .pad-section img {
-  width: 250px;
+  width: 400px;
   height:300px;
 }
  
@@ -52,10 +53,21 @@ html, body {
   background-size: cover;
 }
 
-#aboutGame {
+#aboutGameTitle{
+  padding-top:10%;
+  color:brown;
+  font-size:x-large;
+  font-weight:bold;
+} 
 
+#aboutGame .lead{
+  padding-top:5%;
+  color:brown;
+  padding-bottom:10%;
+  
 }
 #gameRules {
+  padding-top:20%;
   background: url(../assets/original.jpg) no-repeat center center fixed;
   display: table;
   height: 800px;
@@ -65,6 +77,19 @@ html, body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+#gameRules .panel-title{
+  font-size:x-large;
+  text-align:center;
+  color:darkgreen;
+  font-weight:bold;
+}
+
+#gameRules #customRules, #customSteps{
+  text-align:center;
+  color:brown;
+  font-weight:bold;
 }
 
 #gameRules .panel {
@@ -80,6 +105,10 @@ html, body {
 #playButton{
   background-color: #306d9f;
   color:white;
+}
+
+#modalTitle{
+  color:darkblue;
 }
 
 footer {
