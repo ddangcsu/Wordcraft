@@ -271,6 +271,7 @@ var main = function () {
     // Define a model for the Game Timer
     WC.Model.GameLetters = {
         display: ko.observable(false),
+        rawLetters: ko.observableArray(),
         letters: ko.observableArray(),
     };
     //Define a modal for game result
@@ -364,18 +365,22 @@ var main = function () {
     // Function to display the game letters received from the server
     // Data payload is: {"letters": array of letters}
     WC.Controller.displayGameLetters = function (data) {
+        // Ensure all letters are in upper case
+        var upper = _.map(data.letters, function (char) {
+            return char.toUpperCase();
+        });
+
         // Allow game letters to display
         WC.Model.GameLetters.display(true);
 
         // Clear the list of letters
         WC.Model.GameLetters.letters([]);
+        WC.Model.GameLetters.rawLetters(upper);
 
         // Format the letter into a CSS class for the Letter Sprite
         _.each(data.letters, function (letter) {
             var letterObj = {
-                letter: "letter-lg wc-lg-" + letter.toUpperCase(),
-                eU: letter.toUpperCase(),
-                eL: letter.toLowerCase()
+                letter: "letter-lg wc-lg-" + letter,
             };
             WC.Model.GameLetters.letters.push(letterObj);
         });
