@@ -121,6 +121,7 @@ var main = function () {
             while(self.words().length > 0) {
                 self.words().pop();
             }
+            self.wordInput("");
         }
     };
 

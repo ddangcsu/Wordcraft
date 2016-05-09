@@ -47,6 +47,7 @@ var GameSchema = mongoose.Schema({
     isReady: Boolean,
     hasResult: Boolean,
     score: Number,
+    totalScore: Number,
     wordList: [ String ]
 });
 

@@ -153,6 +153,7 @@ var sendResult = function (ioEvent, payload) {
                 $set: {
                     isReady: false,
                     hasResult: false,
+                    score: 0,
                     wordList: []
                 }
             };
@@ -210,6 +211,7 @@ var handleGameResult = function () {
                         name: player.name,
                         avatar: player.avatar,
                         score: player.score,
+                        totalScore: player.totalScore,
                         wordList: player.wordList
                     };
                 });
@@ -302,6 +304,7 @@ var initServerIO = function (server, mongo, redis) {
                 isReady: false,
                 hasResult: false,
                 score: 0,
+                totalScore: 0,
                 wordList: []
             });
 
@@ -473,6 +476,9 @@ var initServerIO = function (server, mongo, redis) {
                     hasResult: true,
                     score: score,
                     wordList: payload.data,
+                },
+                $inc: {
+                    totalScore: score
                 }
             };
             // We update the game table with the score/wordlist and flag it
