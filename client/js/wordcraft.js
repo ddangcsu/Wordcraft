@@ -275,7 +275,7 @@ var main = function () {
             resultsArray.forEach(function (result){
                 self.playersResults.push(result);
                 //sort palyer scores
-                //_.sort(playersResults, "result");
+                _.sortBy(self.playersResults, "result");
             });
         }
     };
@@ -407,6 +407,7 @@ var main = function () {
         // Payload is an array of player objects in the form of:
         // {name, score, wordListArray}
         // Score are shorted with highest to lowest
+        console.log(payload);
         console.log("Server game result payload", payload);
     };
 

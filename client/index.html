@@ -183,9 +183,11 @@
               <!--Dispaly Result-->
               <div class="panel-footer text-center" data-bind="if: GameResults.display">
                 <div data-bind="with: GameResults">
+                    <p data-bind="foreach: playersResults">
 
+                    </p>
                 </div>
-              </div>
+            </div><!--End of game result-->
           </div>
 
           </div> <!-- End Game board column -->
