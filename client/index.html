@@ -134,20 +134,29 @@
 
     <main>
       <div class="container-fluid">
+        <!-- Move the Players as a single row above the game board -->
+        <div class="row" data-bind="with: GameRoom">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="container-fluid" data-bind="foreach: players">
+              <div class="thumbnail">
+                <!-- TODO: Add static avatar for now -->
+                <span class="wc-avatar wc-avatar-5"></span>
+                <!--<span data-bind="css: avatar"></span> -->
+                <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Players list -->
+
+        <!-- Game Board and chat stay below -->
         <div class="row">
-          <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
+          <div class="col-sm-9 col-md-9 col-lg-9">
             <div class="panel panel-info">
               <div class="panel-heading">
-                <h2 class="pannel-title">Game Board
-                  <span class="text-center pull-right" data-bind="if: GameTimer.display">
-                    <span data-bind="with: GameTimer">
-                      <span data-bind="css: tenth"></span>
-                      <span data-bind="css: digit"></span>
-                    </span>
-                  </span>
-                </h2>
+                <h4 class="pannel-title">Game Board</h4>
               </div>
-              <div class="panel-body gameboard">
+              <div class="panel-body gameboard-body">
                 <div class="row">
                   <div data-bind="if: GameLetters.display">
                     <div class="letters text-center" data-bind="with: GameLetters">
@@ -166,6 +175,37 @@
                       <span data-bind="css: digit"></span>
                     </div> <!-- End of Timers DIV -->
                   </div>
+                  <div data-bind="if: GameTimer.display">
+                    <div class="text-center" data-bind="with: GameTimer">
+                      <h4> Remaining Time </h4>
+                      <span data-bind="css: tenth"></span>
+                      <span data-bind="css: digit"></span>
+                    </div>
+                  </div>
+                  <div data-bind="if: GameResults.display">
+                    <div data-bind="with: GameResults">
+                        <h4> Game Result </h4>
+                        <span data-bind="foreach: playersResults">
+                                <div class="col-sm-4 margin40">
+                                    <div class="item-img-wrap ">
+                                        <img class="wc-avatar wc-avatar-5">
+                                        <div class="item-img-overlay">
+                                            <a href="#">
+                                                <span></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="work-desc">
+                                        <h3 data-bind="text: name"></h3>
+                                        <span data-bind="text: score"></span>
+                                        <p data-bind="text: wordList"></p>
+                                    </div>
+                                </div>
+                        </span>
+                      <!-- TODO: Data bind for Game Result -->
+                      <!-- Add data bind for the result in here similar to the above-->
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="panel-footer text-center" data-bind="if: GameTimer.display">
@@ -180,53 +220,27 @@
                   </ul>
                 </div>
               </div>
-              <!--Dispaly Result-->
-              <div class="panel-footer text-center" data-bind="if: GameResults.display">
-                <div data-bind="with: GameResults">
-                    <p data-bind="foreach: playersResults">
-
-                    </p>
-                </div>
-            </div><!--End of game result-->
           </div>
+        </div>
+    </div> <!-- End Game board column -->
 
-          </div> <!-- End Game board column -->
-
-        <!-- Right column to hold chat and player list-->
+        <!-- Right column to hold chat room -->
         <div class="col-sm-3 col-md-3 col-lg-3">
-          <!-- Begin row to hold the game room -->
-          <div class="row">
-            <div class="panel panel-info" data-bind="with: GameRoom">
-              <div class="panel-heading">
-                <h4 class="pannel-title">Players</h4>
-              </div>
-              <div class="panel-body players-body">
-                <!-- Player dynamically get added in here via Knockout Binding -->
-                <ul id="playerList" data-bind="foreach: players">
-                  <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- End row to hold the game room -->
           <!-- Begin row to hold the chatroom -->
-          <div class="row">
-            <div class="panel panel-info" data-bind="with: ChatRoom">
-              <div class="panel-heading">
-                <h4 class="pannel-title">Chat Room</h4>
-              </div>
-              <!-- KO dynamic bind for the chatroom -->
-              <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                <p data-bind="text: message, css: type"></p>
-              </div>
-              <div class="panel-footer">
-                <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-                <button class="btn" data-bind="click: send">Send</button>
-                <button class="btn" data-bind="click: clear">Clear</button>
-              </div>
+          <div class="panel panel-info" data-bind="with: ChatRoom">
+            <div class="panel-heading">
+              <h4 class="pannel-title">Chat Room</h4>
+            </div>
+            <!-- KO dynamic bind for the chatroom -->
+            <div class="panel-body chatroom-body" data-bind="foreach: messages">
+              <p data-bind="text: message, css: type"></p>
+            </div>
+            <div class="panel-footer">
+              <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+              <button class="btn" data-bind="click: send">Send</button>
+              <button class="btn" data-bind="click: clear">Clear</button>
             </div>
           </div>
-          <!-- End row that contain chatroom -->
         </div> <!-- Right column -->
         </div> <!-- Grid Row -->
       </div> <!-- Container -->

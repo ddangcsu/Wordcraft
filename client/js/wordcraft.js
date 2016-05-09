@@ -286,7 +286,7 @@ var main = function () {
         connected = true;
         console.log("Client connected to server");
         console.dir(client);
-        client.name = "player" + Date.now();
+        client.name = "player" + new Date().getSeconds();
         client.avatar = "";
 
         // Greet the server to join the server
@@ -337,8 +337,8 @@ var main = function () {
         }
         WC.Model.CountDown.value(data.timer);
 
-        console.log("displayCountDown: ");
-        console.dir(data);
+        // console.log("displayCountDown: ");
+        // console.dir(data);
     };
 
     // Function to display the game timer received from the server
@@ -352,8 +352,8 @@ var main = function () {
         }
         WC.Model.GameTimer.value(data.timer);
 
-        console.log("displayGameTimer:");
-        console.dir(data);
+        // console.log("displayGameTimer:");
+        // console.dir(data);
     };
 
     // Function to display the game letters received from the server
@@ -474,9 +474,6 @@ var main = function () {
     // Apply KnockOut binding
     ko.applyBindings(WC.Model);
 
-
-
-
     $("main").hide();
 
     //view main page
@@ -485,7 +482,7 @@ var main = function () {
         $("#landing-page-sections").hide();
         $("main").show();
 
-        // Initialize Socket IO Connection and events handling\
+        // Initialize Socket IO Connection and events handling
         // Connect to game only after user click enter game room
         WC.Controller.initIO();
 

@@ -39,11 +39,12 @@ body {
 }
 
 .gameboard-body {
-    min-height: 560px;
-    max-height: 600px;
+    min-height: 400px;
+    max-height: 400px;
 }
 
-.main-game {
-    min-height: 200px;
-    max-height: 200px;
+.thumbnail {
+    width: 100px;
+    text-align: center;
+    display:inline-block;
 }
