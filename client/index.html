@@ -15,8 +15,9 @@
     <!-- Project related styles-->
     <link rel="stylesheet" href="/css/lettersprite.css" type="text/css">
     <link rel="stylesheet" href="/css/numbersprite.css" type="text/css">
+    <link rel="stylesheet" href="/css/avatarsprite.css" type="text/css">
 
-    <!--<link rel="stylesheet" href="/css/style.css" type="text/css">-->
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
     <link rel="stylesheet" href="/css/wordCraft.css" type="text/css">
 
     <title>WordCraft Multiplayers</title>
@@ -50,247 +51,264 @@
       <!-- /navigation bar-->
     </header>
     <div id="landing-page-sections">
-    <!-- first section - Home -->
-    <div id="home" class="home">
-      <div class="text-vcenter" id="greetMsg">
-        <h1>Hello Players</h1>
-        <h2>Welcome to WordCraft</h2>
+      <!-- first section - Home -->
+      <div id="home" class="home">
+        <div class="text-vcenter" id="greetMsg">
+          <h1>Hello Players</h1>
+          <h2>Welcome to WordCraft</h2>
+        </div>
       </div>
-    </div>
-    <!-- /first section -->
+      <!-- /first section -->
 
-    <!-- second section - AboutGame -->
-    <div id="aboutGame" class="pad-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-            <img src="assets/wordImage.jpg" alt="" />
-          </div>
-          <div class="col-sm-6 text-center">
-            <h2 id="aboutGameTitle">About Game</h2>
-            <p class="lead">WordCraft is a multiplayer game. Invite your friends and play! Players must enter as many number of words they can from the given random letters within 20 seconds.</p>
+      <!-- second section - AboutGame -->
+      <div id="aboutGame" class="pad-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <img src="assets/wordImage.jpg" alt="" />
+            </div>
+            <div class="col-sm-6 text-center">
+              <h2 id="aboutGameTitle">About Game</h2>
+              <p class="lead">WordCraft is a multiplayer game. Invite your friends and play! Players must enter as many number of words they can from the given random letters within 20 seconds.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- /second section -->
+      <!-- /second section -->
 
-    <!-- third section - Game Rules -->
-    <div id="gameRules" class="pad-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h2 class="panel-title">Game Rules</h2>
-              </div>
-              <div class="panel-body lead" id="customRules">
-                <ul>
-                  <li>You can reuse the given letters</li>
-                  <li>Words must be a valid one</li>
+      <!-- third section - Game Rules -->
+      <div id="gameRules" class="pad-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h2 class="panel-title">Game Rules</h2>
+                </div>
+                <div class="panel-body lead" id="customRules">
+                  <ul>
+                    <li>You can reuse the given letters</li>
+                    <li>Words must be a valid one</li>
                     <li>Do not repeat words</li>
-                  <li>Game doesnot accept single letters</li>
+                    <li>Game doesnot accept single letters</li>
                   </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h2 class="panel-title">Game Steps</h2>
-              </div>
-              <div class="panel-body lead" id="customSteps">
-                <ul>
-                  <li>Go to Want to Play section</li>
-                  <li>Give your name and enter GameRoom </li>
-                  <li>To start the game type /ready in chat room</li>
-                  <li>5 Seconds count down will be displayed</li>
-                  <li>Start entering your words in the input box</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- /third section -->
-
-    <!-- fourth section -->
-    <div id="playButton" class="pad-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12 text-center"  id="gameMsg">
-            <h3>Now its time to play!</h3>
-            <h4>Enjoy our WordCraft Game</h4>
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">GameRoom</button>
-
-            <!-- Modal -->
-              <div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog modal-sm">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title" id="modalTitle">Enter WordCraft GameRoom!</h4>
-                    </div>
-
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                      <!-- Modal Form -->
-                      <div id="userForm" class="form-horizontal">
-                        <div class="form-group">
-                          <label class="col-xs-3 control-label"></label>
-                          <div class="col-xs-5">
-                            <input type="text" class="form-control" name="username" placeholder="PlayerName"/>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="col-xs-5 col-xs-offset-3">
-                            <button id= "enter-game-room" type="submit" data-dismiss="modal" class="btn btn-primary">Enter</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                          </div>
-                        </div>
-                    </div>
-                      <!-- /Modal Form -->
-                    </div>
-                    <!-- /Modal Body -->
-
-                  </div>
                 </div>
               </div>
-              <!--/Modal -->
+            </div>
+            <div class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h2 class="panel-title">Game Steps</h2>
+                </div>
+                <div class="panel-body lead" id="customSteps">
+                  <ul>
+                    <li>Go to Want to Play section</li>
+                    <li>Give your name and enter GameRoom </li>
+                    <li>To start the game type /ready in chat room</li>
+                    <li>5 Seconds count down will be displayed</li>
+                    <li>Start entering your words in the input box</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /third section -->
 
+      <!-- fourth section -->
+      <div id="playButton" class="pad-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12 text-center"  id="gameMsg">
+              <h3>Now its time to play!</h3>
+              <h4>Enjoy our WordCraft Game</h4>
+              <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#joinModal">GameRoom</button>
             </div>
           </div>
         </div>
       </div>
       <!-- /fourth section -->
-  </div>
+    </div>
 
 
-      <main>
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
-              <div class="panel panel-info">
-                <div class="panel-heading">
-                  <h2 class="pannel-title">Game Board
-                    <span class="text-center pull-right" data-bind="if: GameTimer.display">
-                      <span data-bind="with: GameTimer">
-                        <span data-bind="css: tenth"></span>
-                        <span data-bind="css: digit"></span>
-                      </span>
+    <main>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h2 class="pannel-title">Game Board
+                  <span class="text-center pull-right" data-bind="if: GameTimer.display">
+                    <span data-bind="with: GameTimer">
+                      <span data-bind="css: tenth"></span>
+                      <span data-bind="css: digit"></span>
                     </span>
-                  </h2>
-                </div>
-                <div class="panel-body gameboard">
-                  <div class="row">
-                    <div data-bind="if: GameLetters.display">
-                      <div class="letters text-center" data-bind="with: GameLetters">
-                        <!-- Place to put the server render letters here -->
-                        <span data-bind="foreach: letters">
-                          <span data-bind="css: letter"></span>
-                        </span>
-                      </div>  <!-- End of letters DIV -->
-                    </div>
-                    <div data-bind="if: CountDown.display">
-                      <div class="timers text-center" data-bind="with: CountDown">
-                        <!-- Place to put the server render Timer here -->
-                        <!-- Below are example count down timer -->
-                        <h3> Get Ready !!! </h3>
-                        <span data-bind="css: tenth"></span>
-                        <span data-bind="css: digit"></span>
-                      </div> <!-- End of Timers DIV -->
-                    </div>
+                  </span>
+                </h2>
+              </div>
+              <div class="panel-body gameboard">
+                <div class="row">
+                  <div data-bind="if: GameLetters.display">
+                    <div class="letters text-center" data-bind="with: GameLetters">
+                      <!-- Place to put the server render letters here -->
+                      <span data-bind="foreach: letters">
+                        <span data-bind="css: letter"></span>
+                      </span>
+                    </div>  <!-- End of letters DIV -->
+                  </div>
+                  <div data-bind="if: CountDown.display">
+                    <div class="timers text-center" data-bind="with: CountDown">
+                      <!-- Place to put the server render Timer here -->
+                      <!-- Below are example count down timer -->
+                      <h3> Get Ready !!! </h3>
+                      <span data-bind="css: tenth"></span>
+                      <span data-bind="css: digit"></span>
+                    </div> <!-- End of Timers DIV -->
                   </div>
                 </div>
-                <div class="panel-footer text-center" data-bind="if: GameTimer.display">
-                  <div data-bind="with: WordList">
-                    <!-- This is where the user can type in there input -->
-                    <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
-                    <button data-bind="click: addWord">Submit</button>
+              </div>
+              <div class="panel-footer text-center" data-bind="if: GameTimer.display">
+                <div data-bind="with: WordList">
+                  <!-- This is where the user can type in there input -->
+                  <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
+                  <button data-bind="click: addWord">Submit</button>
 
-                    <!-- for testing purposes only -->
-                    <ul data-bind="foreach: words">
-                      <p data-bind="text: word"></p>
-                    </ul>
-                  </div>
-                </div>
-                <!--Dispaly Result-->
-                <div class="panel-footer text-center" data-bind="if: GameResults.display">
-                  <div data-bind="with: GameResults">
-
-                  </div>
-                </div>
-            </div>
-
-            </div> <!-- End Game board column -->
-
-          <!-- Right column to hold chat and player list-->
-          <div class="col-sm-3 col-md-3 col-lg-3">
-            <!-- Begin row to hold the game room -->
-            <div class="row">
-              <div class="panel panel-info" data-bind="with: GameRoom">
-                <div class="panel-heading">
-                  <h4 class="pannel-title">Players</h4>
-                </div>
-                <div class="panel-body players-body">
-                  <!-- Player dynamically get added in here via Knockout Binding -->
-                  <ul id="playerList" data-bind="foreach: players">
-                    <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
+                  <!-- for testing purposes only -->
+                  <ul data-bind="foreach: words">
+                    <p data-bind="text: word"></p>
                   </ul>
                 </div>
               </div>
-            </div>
-            <!-- End row to hold the game room -->
-            <!-- Begin row to hold the chatroom -->
-            <div class="row">
-              <div class="panel panel-info" data-bind="with: ChatRoom">
-                <div class="panel-heading">
-                  <h4 class="pannel-title">Chat Room</h4>
-                </div>
-                <!-- KO dynamic bind for the chatroom -->
-                <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                  <p data-bind="text: message, css: type"></p>
-                </div>
-                <div class="panel-footer">
-                  <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-                  <button class="btn" data-bind="click: send">Send</button>
-                  <button class="btn" data-bind="click: clear">Clear</button>
+              <!--Dispaly Result-->
+              <div class="panel-footer text-center" data-bind="if: GameResults.display">
+                <div data-bind="with: GameResults">
+
                 </div>
               </div>
+          </div>
+
+          </div> <!-- End Game board column -->
+
+        <!-- Right column to hold chat and player list-->
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <!-- Begin row to hold the game room -->
+          <div class="row">
+            <div class="panel panel-info" data-bind="with: GameRoom">
+              <div class="panel-heading">
+                <h4 class="pannel-title">Players</h4>
+              </div>
+              <div class="panel-body players-body">
+                <!-- Player dynamically get added in here via Knockout Binding -->
+                <ul id="playerList" data-bind="foreach: players">
+                  <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
+                </ul>
+              </div>
             </div>
-            <!-- End row that contain chatroom -->
-          </div> <!-- Right column -->
-          </div> <!-- Grid Row -->
-        </div> <!-- Container -->
-      </main>
+          </div>
+          <!-- End row to hold the game room -->
+          <!-- Begin row to hold the chatroom -->
+          <div class="row">
+            <div class="panel panel-info" data-bind="with: ChatRoom">
+              <div class="panel-heading">
+                <h4 class="pannel-title">Chat Room</h4>
+              </div>
+              <!-- KO dynamic bind for the chatroom -->
+              <div class="panel-body chatroom-body" data-bind="foreach: messages">
+                <p data-bind="text: message, css: type"></p>
+              </div>
+              <div class="panel-footer">
+                <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+                <button class="btn" data-bind="click: send">Send</button>
+                <button class="btn" data-bind="click: clear">Clear</button>
+              </div>
+            </div>
+          </div>
+          <!-- End row that contain chatroom -->
+        </div> <!-- Right column -->
+        </div> <!-- Grid Row -->
+      </div> <!-- Container -->
+    </main>
 
-      <section id="modal-anchor">
-        <!-- Dynamically attached modal and remove it here -->
-        <!-- Location to store code for modal -->
-      </section>
+    <section id="modal-anchor">
+      <!-- Modal to ask user to enter the game name -->
+      <div id="joinModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title" id="modalTitle">Enter WordCraft GameRoom!</h4>
+            </div>
 
-      <!-- footer -->
-      <footer>
-       <!-- <hr />-->
-        <div class="container">
-          <p class="text-right">Copyright &copy; CPSC473 GameTeam 2016</p>
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <!-- Modal Form -->
+              <div id="userForm" class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-xs-3 control-label"></label>
+                  <div class="col-xs-5">
+                    <input type="text" class="form-control" name="username" placeholder="PlayerName"/>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-xs-5 col-xs-offset-3">
+                    <button id= "enter-game-room" type="submit" data-dismiss="modal" class="btn btn-primary">Enter</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Form -->
+            </div>
+            <!-- /Modal Body -->
+          </div>
         </div>
-      </footer>
-      <!-- /footer -->
+      </div>
+      <!--/Modal -->
 
-      <!-- List of all the javascript libraries -->
-      <!-- jquery -->
-      <script src="/lib/jquery/jquery-2.2.2.min.js" charset="utf-8"></script>
-      <!-- Bootstrap-->
-      <script src="/lib/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
-      <!-- Loadash -->
-      <script src="/lib/lodash/lodash.js" charset="utf-8"></script>
-      <!-- Knockout -->
-      <script src="/lib/knockout/knockout-3.4.0.js" charset="utf-8"></script>
-      <!-- Socket -->
-      <script src="/socket.io/socket.io.js" charset="utf-8"></script>
-      <!-- Project related JS file -Wordcraft -->
-      <script src="/js/wordcraft.js" charset="utf-8"></script>
+      <!-- Modal to show game in progress -->
+      <div id="inProgressModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header alert-warning">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Game in Progress</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                We are sorry but the game is currently in progress.
+                Please come back later.
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div> <!-- Modal Content -->
+        </div> <!-- Modal Dialog -->
+      </div> <!-- Modal class/role -->
+    </section>
+
+    <!-- footer -->
+    <footer>
+     <!-- <hr />-->
+      <div class="container">
+        <p class="text-right">Copyright &copy; CPSC473 GameTeam 2016</p>
+      </div>
+    </footer>
+    <!-- /footer -->
+
+    <!-- List of all the javascript libraries -->
+    <!-- jquery -->
+    <script src="/lib/jquery/jquery-2.2.2.min.js" charset="utf-8"></script>
+    <!-- Bootstrap-->
+    <script src="/lib/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+    <!-- Loadash -->
+    <script src="/lib/lodash/lodash.js" charset="utf-8"></script>
+    <!-- Knockout -->
+    <script src="/lib/knockout/knockout-3.4.0.js" charset="utf-8"></script>
+    <!-- Socket -->
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    <!-- Project related JS file -Wordcraft -->
+    <script src="/js/wordcraft.js" charset="utf-8"></script>
   </body>
 </html>

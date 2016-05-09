@@ -5,15 +5,6 @@ undef: true, unused: true, strict: true, trailing: true */
 /* global console: true, io: true, ko: true, _: true */
 var main = function () {
     "use strict";
-    $("main").hide();
-
-    //view main page
-    $("#enter-game-room").on("click", function(){
-        console.log("hi");
-        $("#landing-page-sections").hide();
-        $("main").show();
-
-    });
 
     // WordCraft namespace
     var WC = {
@@ -422,8 +413,10 @@ var main = function () {
     // Function to display message that game in progress and user need to join
     // later
     WC.Controller.handleGameInProgress = function () {
-        // TODO: Code to handle display message/dialog to user
-
+        // Display the modal tell player they can't come in while game in progress
+        $("#inProgressModal").modal("show");
+        WC.Model.GameRoom.remove({avatar: client.avatar, name: client.name, id: "/#" + client.id});
+        return false;
     };
 
     // Function to initialize IO connection and setup
@@ -480,10 +473,22 @@ var main = function () {
     // Apply KnockOut binding
     ko.applyBindings(WC.Model);
 
-    // Initialize Socket IO Connection and events handling
-    WC.Controller.initIO();
 
 
+
+    $("main").hide();
+
+    //view main page
+    $("#enter-game-room").on("click", function(){
+        console.log("hi");
+        $("#landing-page-sections").hide();
+        $("main").show();
+
+        // Initialize Socket IO Connection and events handling\
+        // Connect to game only after user click enter game room
+        WC.Controller.initIO();
+
+    });
 
 
 
