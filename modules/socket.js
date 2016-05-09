@@ -208,6 +208,7 @@ var handleGameResult = function () {
                 var payload = _.map(sortedPlayer, function (player) {
                     return {
                         name: player.name,
+                        avatar: player.avatar,
                         score: player.score,
                         wordList: player.wordList
                     };
@@ -280,6 +281,7 @@ var initServerIO = function (server, mongo, redis) {
         // Hello payload contain: type, from, to, msg
         socket.on("hello", function (payload) {
             socket.name = payload.from;
+            socket.avatar = payload.avatar;
             console.log(payload.type + ": <" + socket.name + "> says " + payload.msg);
 
             // Send a greeting back to client
@@ -294,6 +296,7 @@ var initServerIO = function (server, mongo, redis) {
 
             // Save the player into the Games table
             var newPlayer = mClient.Game({
+                avatar:socket.avatar,
                 name: socket.name,
                 id: socket.id,
                 isReady: false,
@@ -307,7 +310,7 @@ var initServerIO = function (server, mongo, redis) {
                 // Then we get a list of players back
                 console.log("Add new player to Game table " + result);
                 // Query all players in Game for name, id
-                return mClient.Game.find().select("name id -_id").execAsync();
+                return mClient.Game.find().select("avatar name id -_id").execAsync();
             })
             .then(function (playerList) {
                 // Then we notify the rest of the players that a new player

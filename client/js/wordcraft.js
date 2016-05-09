@@ -40,6 +40,7 @@ var main = function () {
         // console.log("Client id:" + "/#" + client.id);
         // console.log("Player id:" + player.id);
         return {
+            avatar: player.avatar,
             name: player.name,
             id: player.id,
             self: ("/#" + client.id === player.id) ? true: false,
@@ -295,17 +296,19 @@ var main = function () {
         console.log("Client connected to server");
         console.dir(client);
         client.name = "player" + Date.now();
+        client.avatar = "";
 
         // Greet the server to join the server
         var newPayload = {
             type: "greeting",
             from: client.name,
+            avatar: "",
             msg: "Hello"
         };
         client.emit("hello", newPayload);
 
         // Add self so that it show up as first player on the list
-        WC.Model.GameRoom.add({name: client.name, id: "/#" + client.id});
+        WC.Model.GameRoom.add({avatar: client.avatar, name: client.name, id: "/#" + client.id});
     };
 
     // Function to display the chat message (need to convert to KO)
