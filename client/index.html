@@ -244,7 +244,9 @@
                 <div class="form-group">
                   <label class="col-xs-3 control-label"></label>
                   <div class="col-xs-5">
-                    <input type="text" class="form-control" name="username" placeholder="PlayerName"/>
+                    <div data-bind="with: NewPlayerName">
+                      <input type="text" class="form-control" data-bind="textInput: newName" name="username" placeholder="PlayerName"/>
+                    </div>
                   </div>
                 </div>
                 <div class="form-group">
