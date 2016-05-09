@@ -89,14 +89,16 @@ var main = function () {
 
         addWord: function () {
             var self = this;
-            var wordInput = self.wordInput();
+            var wordInput = self.wordInput().toLowerCase();
             if (wordInput !== "") {
-
+                
                 // Check validity and add to words list
                 $.get("dict/" + wordInput, function(result) {
-                    console.log(result);
                     if (result.valid) {
-                        self.words.push({ word: wordInput });
+                        // Check if the word exists in the array
+                        if (!_.some(self.words(), function (word) {return word.word === wordInput})) {
+                            self.words.push({ word: wordInput });
+                        }
                     }
                 });
 
