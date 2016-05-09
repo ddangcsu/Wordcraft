@@ -343,7 +343,9 @@ var main = function () {
     // Function to display the countdown timer received from the server
     // Data payload is: {"timer": number}
     WC.Controller.displayCountDown = function (data) {
+        // Remove results display and clear the result list
         WC.Model.GameResults.display(false);
+        WC.Model.GameResults.playersResults([]);
         if (data.timer > 0) {
             WC.Model.CountDown.display(true);
         } else {
