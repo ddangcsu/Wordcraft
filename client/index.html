@@ -220,28 +220,27 @@
                   </ul>
                 </div>
               </div>
-          </div>
-        </div>
-    </div> <!-- End Game board column -->
+            </div>
+          </div> <!-- End Game board column -->
 
-        <!-- Right column to hold chat room -->
-        <div class="col-sm-3 col-md-3 col-lg-3">
-          <!-- Begin row to hold the chatroom -->
-          <div class="panel panel-info" data-bind="with: ChatRoom">
-            <div class="panel-heading">
-              <h4 class="pannel-title">Chat Room</h4>
+          <!-- Right column to hold chat room -->
+          <div class="col-sm-3 col-md-3 col-lg-3">
+            <!-- Begin row to hold the chatroom -->
+            <div class="panel panel-info" data-bind="with: ChatRoom">
+              <div class="panel-heading">
+                <h4 class="pannel-title">Chat Room</h4>
+              </div>
+              <!-- KO dynamic bind for the chatroom -->
+              <div class="panel-body chatroom-body" data-bind="foreach: messages">
+                <p data-bind="text: message, css: type"></p>
+              </div>
+              <div class="panel-footer">
+                <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+                <button class="btn" data-bind="click: send">Send</button>
+                <button class="btn" data-bind="click: clear">Clear</button>
+              </div>
             </div>
-            <!-- KO dynamic bind for the chatroom -->
-            <div class="panel-body chatroom-body" data-bind="foreach: messages">
-              <p data-bind="text: message, css: type"></p>
-            </div>
-            <div class="panel-footer">
-              <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-              <button class="btn" data-bind="click: send">Send</button>
-              <button class="btn" data-bind="click: clear">Clear</button>
-            </div>
-          </div>
-        </div> <!-- Right column -->
+          </div> <!-- Right column -->
         </div> <!-- Grid Row -->
       </div> <!-- Container -->
     </main>
