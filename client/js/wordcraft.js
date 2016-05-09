@@ -38,6 +38,10 @@ var main = function () {
         };
     };
 
+    WC.Model.NewPlayerName = {
+        newName: ko.observable(),
+    };
+
     // Define a GameRoom Model that contain an array of observable Players
     WC.Model.GameRoom = {
         // We track a list of players
@@ -117,6 +121,7 @@ var main = function () {
             while(self.words().length > 0) {
                 self.words().pop();
             }
+            self.wordInput("");
         }
     };
 
@@ -286,7 +291,8 @@ var main = function () {
         connected = true;
         console.log("Client connected to server");
         console.dir(client);
-        client.name = "player" + new Date().getSeconds();
+        //client.name = "player" + new Date().getSeconds();
+        client.name = WC.Model.NewPlayerName.newName();
         client.avatar = "";
 
         // Greet the server to join the server
@@ -481,10 +487,10 @@ var main = function () {
         console.log("hi");
         $("#landing-page-sections").hide();
         $("main").show();
-
         // Initialize Socket IO Connection and events handling
         // Connect to game only after user click enter game room
         WC.Controller.initIO();
+        console.log(WC.Model.NewPlayerName.newName());
 
     });
 
