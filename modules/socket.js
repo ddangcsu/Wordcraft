@@ -116,7 +116,7 @@ var handleGameStart = function () {
             // Call GameStart();
             if (userCount === readyCount) {
                 var countDownTime = 5;
-                var gameTimer = 20;
+                var gameTimer = 30;
                 startGame(countDownTime, gameTimer);
             }
         }
