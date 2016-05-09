@@ -42,6 +42,13 @@ var main = function () {
         newName: ko.observable(),
     };
 
+    // Add a computed variable to randomly pick one of the 27 avatars
+    WC.Model.NewPlayerName.avatar = ko.computed(function () {
+        var rand = _.random(1,27);
+        return ("wc-avatar wc-avatar-" + rand);
+    }, WC.Model.NewPlayerName);
+
+
     // Define a GameRoom Model that contain an array of observable Players
     WC.Model.GameRoom = {
         // We track a list of players
@@ -293,13 +300,13 @@ var main = function () {
         console.dir(client);
         //client.name = "player" + new Date().getSeconds();
         client.name = WC.Model.NewPlayerName.newName();
-        client.avatar = "";
+        client.avatar = WC.Model.NewPlayerName.avatar();
 
         // Greet the server to join the server
         var newPayload = {
             type: "greeting",
             from: client.name,
-            avatar: "",
+            avatar: client.avatar,
             msg: "Hello"
         };
         client.emit("hello", newPayload);
