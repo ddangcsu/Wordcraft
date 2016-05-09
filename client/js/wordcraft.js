@@ -104,24 +104,14 @@ var main = function () {
         // Add word when enter key is pressed
         onKeyPress: function (data, event) {
             var self = this;
-            if(event.keyCode === WC.Model.GameLetters.letters()[0].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[1].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[2].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[3].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[4].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[5].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[6].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[7].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[0].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[1].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[2].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[3].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[4].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[5].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[6].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[7].eL.charCodeAt(0)) {
+            // Convert the event keyCode to letter
+            var eventKey = String.fromCharCode(event.keyCode).toUpperCase();
+
+            // If eventKey is a letter in the rawLetters array return true
+            if ( WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1 ) {
                 return true;
             }
+
             // If the enter key was pressed, addWord
             if (event.keyCode === 13) {
                 self.addWord();
@@ -287,9 +277,10 @@ var main = function () {
     WC.Model.GameResults = {
         playersResults: ko.observableArray([]),
         display: ko.observable(false),
-        setArray: function(resultsArray){
+        setArray: function (resultsArray) {
+            var self = this;
             resultsArray.forEach(function (result){
-                playersResults.push(result);
+                self.playersResults.push(result);
                 //sort palyer scores
                 //_.sort(playersResults, "result");
             });
