@@ -48,3 +48,42 @@ body {
     text-align: center;
     display:inline-block;
 }
+/*game result style*/
+.margin40 {
+    margin-bottom: 40px;
+}
+.item-img-wrap {
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.result-page {
+  width: 100%;
+  padding: 10px 10px;
+  background: #FFF;
+  border-top: none;
+  position: relative;
+}
+.result-page h3 {
+  margin: 10px;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+.result-page h4 {
+  margin: 10px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+.result-page p {
+  margin: 10px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-transform: capitalize;
+}

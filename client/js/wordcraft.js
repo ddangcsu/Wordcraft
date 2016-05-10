@@ -91,7 +91,7 @@ var main = function () {
             var self = this;
             var wordInput = self.wordInput().toLowerCase();
             if (wordInput !== "") {
-                
+
                 // Check validity and add to words list
                 $.get("dict/" + wordInput, function(result) {
                     if (result.valid) {
@@ -425,7 +425,6 @@ var main = function () {
         // Payload is an array of player objects in the form of:
         // {name, score, wordListArray}
         // Score are shorted with highest to lowest
-        console.log(payload);
         console.log("Server game result payload", payload);
     };
 
