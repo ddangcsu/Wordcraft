@@ -200,6 +200,7 @@
                       <span data-bind="css: digit"></span>
                     </div>
                   </div>
+                  <!--Game Result-->
                   <div data-bind="if: GameResults.display">
                     <div data-bind="with: GameResults">
                         <h4> Game Result </h4>
@@ -222,7 +223,7 @@
                       <!-- TODO: Data bind for Game Result -->
                       <!-- Add data bind for the result in here similar to the above-->
                     </div>
-                  </div>
+                </div><!--End of Game Result-->
                 </div>
               </div>
               <div class="panel-footer text-center" data-bind="if: GameTimer.display">
@@ -242,10 +243,26 @@
               <div class="panel-heading">
                 <h4 class="pannel-title">Chat Room</h4>
               </div>
-              <!-- KO dynamic bind for the chatroom -->
-              <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                <p data-bind="text: message, css: type"></p>
-              </div>
+              <!--chat template-->
+              <div id="demo-chat-body" class="collapse in">
+                <div class="nano has-scrollbar" style="height:380px">
+                    <div class="nano-content pad-all" tabindex="0" style="right: -17px;">
+                        <ul class="list-unstyled media-block">
+                            <!-- KO dynamic bind for the chatroom -->
+                            <div class="panel-body chatroom-body" data-bind="foreach: messages">
+          						<li class="mar-btm">
+          							<div class="media-body pad-hor">
+          								<div class="speech">
+          									<a class="media-heading">Player</a><!--TODO: need to display players name-->
+          									<p data-bind="text: message, css: type"></p>
+          								</div>
+          							</div>
+          						</li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+              </div><!--end of chat template-->
               <div class="panel-footer">
                 <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
                 <button class="btn" data-bind="click: send">Send</button>

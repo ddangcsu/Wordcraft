@@ -96,3 +96,51 @@ body {
   font-weight: 500;
   color: red;
 }
+/*chat room style*/
+.nano {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.nano>.nano-content {
+    position: absolute;
+    overflow: scroll;
+    overflow-x: hidden;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.pad-all {
+    padding: 10px;
+}
+.mar-btm {
+    margin-bottom: 10px;
+}
+.media-block .media-body {
+    display: block;
+    overflow: hidden;
+    width: auto;
+}
+.pad-hor {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.speech {
+    position: relative;
+    background: #b7dcfe;
+    color: #317787;
+    display: inline-block;
+    border-radius: 0;
+    padding: 12px 20px;
+}
+.speech .media-heading {
+    font-size: 1.2em;
+    color: #23535c;
+    display: block;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+
+    font-weight: 300;
+}
