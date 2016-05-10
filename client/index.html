@@ -151,7 +151,24 @@
 
         <!-- Game Board and chat stay below -->
         <div class="row">
-          <div class="col-sm-9 col-md-9 col-lg-9">
+          <div class="col-sm-2 col-md-2 col-lg-2">
+            <!-- Begin row to hold the wordlist -->
+            <div class="panel panel-info" data-bind="with: WordList">
+              <div class="panel-heading">
+                <h4 class="pannel-title">Word List</h4>
+              </div>
+              <div class="panel-body gameboard-body">
+                <div class="row">
+                    <ul data-bind="foreach: words">
+                        <p data-bind="text: word"></p>
+                    </ul>
+                </div>
+              </div>
+              <div class="panel-footer">
+              </div>
+            </div>
+          </div> <!-- Left column -->
+          <div class="col-sm-7 col-md-7 col-lg-7">
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h4 class="pannel-title">Game Board</h4>
@@ -213,11 +230,6 @@
                   <!-- This is where the user can type in there input -->
                   <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
                   <button data-bind="click: addWord">Submit</button>
-
-                  <!-- for testing purposes only -->
-                  <ul data-bind="foreach: words">
-                    <p data-bind="text: word"></p>
-                  </ul>
                 </div>
               </div>
             </div>
