@@ -198,7 +198,7 @@ var main = function () {
                 self.addWord();
                 return false;
             }
-            return false;
+            return true;
         },
         // Reset the word list after sending to server
         resetList: function () {
