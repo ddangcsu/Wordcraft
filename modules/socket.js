@@ -106,7 +106,7 @@ var handleGameStart = function () {
         // Then we check the playerList to compare the number of players
         // and the number of isReady.  If both match we start the game
         if (playerList) {
-            console.log("playerList is: " + playerList);
+            //console.log("playerList is: " + playerList);
             var userCount = _.size(playerList);
             var readyCount = _.filter(playerList, {"isReady": true}).length;
 
@@ -191,7 +191,7 @@ var handleGameResult = function () {
         // Then we check the playerList to compare the number of players
         // and the number of isReady.  If both match we start the game
         if (playerList) {
-            console.log("playerList is: " + playerList);
+            //console.log("playerList is: " + playerList);
             var userCount = _.size(playerList);
             var resultCount = _.filter(playerList, {"hasResult": true}).length;
 
@@ -309,16 +309,16 @@ var initServerIO = function (server, mongo, redis) {
             });
 
             newPlayer.saveAsync()
-            .then(function (result) {
+            .then(function () {
                 // Then we get a list of players back
-                console.log("Add new player to Game table " + result);
+                console.log("Add new player to Game table ");
                 // Query all players in Game for name, id
                 return mClient.Game.find().select("avatar name id -_id").execAsync();
             })
             .then(function (playerList) {
                 // Then we notify the rest of the players that a new player
                 // joined and provide a new full list of players
-                console.log("Search result is: ", playerList);
+                // console.log("Search result is: ", playerList);
                 // Craft a new payload to notify all users that a new player joined
                 newPayload = {};
                 newPayload.type = "system";
@@ -483,9 +483,9 @@ var initServerIO = function (server, mongo, redis) {
             };
             // We update the game table with the score/wordlist and flag it
             mClient.Game.findOneAndUpdateAsync(sqlWhere, sqlUpdate)
-            .then(function (result) {
+            .then(function () {
                 // Once updated, we need to see if we can send up the score
-                console.log("Update result " + result);
+                //console.log("Update result " + result);
                 handleGameResult();
             })
             .catch(function (err) {
