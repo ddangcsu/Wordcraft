@@ -6,12 +6,42 @@ undef: true, unused: true, strict: true, trailing: true */
 var main = function () {
     "use strict";
 
+    // List of avatars.  These are static CSS sprite class to display an avatar
+    var avatars = [
+        "wc-avatar wc-avatar-1",
+        "wc-avatar wc-avatar-2",
+        "wc-avatar wc-avatar-3",
+        "wc-avatar wc-avatar-4",
+        "wc-avatar wc-avatar-5",
+        "wc-avatar wc-avatar-6",
+        "wc-avatar wc-avatar-7",
+        "wc-avatar wc-avatar-8",
+        "wc-avatar wc-avatar-9",
+        "wc-avatar wc-avatar-10",
+        "wc-avatar wc-avatar-11",
+        "wc-avatar wc-avatar-12",
+        "wc-avatar wc-avatar-13",
+        "wc-avatar wc-avatar-14",
+        "wc-avatar wc-avatar-15",
+        "wc-avatar wc-avatar-16",
+        "wc-avatar wc-avatar-17",
+        "wc-avatar wc-avatar-18",
+        "wc-avatar wc-avatar-19",
+        "wc-avatar wc-avatar-20",
+        "wc-avatar wc-avatar-21",
+        "wc-avatar wc-avatar-22",
+        "wc-avatar wc-avatar-23",
+        "wc-avatar wc-avatar-24",
+        "wc-avatar wc-avatar-25",
+        "wc-avatar wc-avatar-26",
+        "wc-avatar wc-avatar-27",
+    ];
+
     // WordCraft namespace
     var WC = {
         // Define the User Interface jQuery selector for each DOM section
         UI: {
             chatRoom: $(".chatroom-body"),
-            playerList: $(".players-body"),
         },
         // Define holder for Func functions
         Controller: {},
@@ -39,14 +69,56 @@ var main = function () {
     };
 
     WC.Model.NewPlayerName = {
+        avatar: ko.observable("wc-avatar wc-avatar-1"),
+        avatars: avatars,
+        hasError: ko.observable(false),
+        errorMsg: ko.observable(),
         newName: ko.observable(),
+
+        join: function () {
+            var self = this;
+            var url;
+
+            if (!self.newName()) { // Undefined or empty
+                self.hasError(true);
+                self.errorMsg("Name required");
+                console.log("Name required");
+                return true;
+            } else {
+                url = "/checkName/" + self.newName();
+                console.log("Game Name: " + self.newName());
+
+                // Check if the name is a good unique name
+                $.get(url)
+                .done(function (result) {
+                    // Name is good start the game.
+                    if (result.hasOwnProperty("isUnique")) {
+                        if (result.isUnique === true) {
+                            // Hide the modal
+                            $("#joinModal").modal("hide");
+                            $("#landing-page-sections").hide();
+                            $("main").show();
+                            // Join the game
+                            WC.Controller.initIO();
+                            return false;
+                        }
+                    }
+                    // Name is not good, go back to it.
+                    self.hasError(true);
+                    self.errorMsg(self.newName() + " is taken.  Choose a different name");
+                    self.newName("");
+                    return true;
+                });
+            }
+            return false;
+        },
     };
 
-    // Add a computed variable to randomly pick one of the 27 avatars
-    WC.Model.NewPlayerName.avatar = ko.computed(function () {
-        var rand = _.random(1,27);
-        return ("wc-avatar wc-avatar-" + rand);
-    }, WC.Model.NewPlayerName);
+    // // Add a computed variable to randomly pick one of the 27 avatars
+    // WC.Model.NewPlayerName.avatar = ko.computed(function () {
+    //     var rand = _.random(1,27);
+    //     return ("wc-avatar wc-avatar-" + rand);
+    // }, WC.Model.NewPlayerName);
 
 
     // Define a GameRoom Model that contain an array of observable Players
@@ -497,17 +569,17 @@ var main = function () {
 
     $("main").hide();
 
-    //view main page
-    $("#enter-game-room").on("click", function(){
-        console.log("hi");
-        $("#landing-page-sections").hide();
-        $("main").show();
-        // Initialize Socket IO Connection and events handling
-        // Connect to game only after user click enter game room
-        WC.Controller.initIO();
-        console.log(WC.Model.NewPlayerName.newName());
-
-    });
+    // //view main page
+    // $("#enter-game-room").on("click", function(){
+    //     console.log("hi");
+    //     $("#landing-page-sections").hide();
+    //     $("main").show();
+    //     // Initialize Socket IO Connection and events handling
+    //     // Connect to game only after user click enter game room
+    //     WC.Controller.initIO();
+    //     console.log(WC.Model.NewPlayerName.newName());
+    //
+    // });
 
 
 

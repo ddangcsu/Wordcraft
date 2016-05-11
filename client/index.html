@@ -283,24 +283,30 @@
             </div>
 
             <!-- Modal Body -->
-            <div class="modal-body">
+            <div class="modal-body" data-bind="with: NewPlayerName">
               <!-- Modal Form -->
-              <div id="userForm" class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-xs-3 control-label"></label>
-                  <div class="col-xs-5">
-                    <div data-bind="with: NewPlayerName">
-                      <input type="text" class="form-control" data-bind="textInput: newName" name="username" placeholder="PlayerName"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-xs-5 col-xs-offset-3">
-                    <button id="enter-game-room" type="submit" data-dismiss="modal" class="btn btn-primary">Enter</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  </div>
+              <div class="form-group">
+                <label>Choose an avatar for your game</label>
+                <div data-bind="foreach: avatars">
+                  <label class="radio-inline">
+                    <input type="radio" data-bind="attr: {value: $data}, checked: $parent.avatar">
+                    <span data-bind="css: $data"></span>
+                  </label>
                 </div>
               </div>
+              <div class="form-group">
+                <label for="inputName">Enter your game name:</label>
+                <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"
+                  data-bind="textInput: newName" name="username" placeholder="PlayerName">
+              </div>
+              <div class="form-group error" data-bind="if: hasError">
+                <span data-bind="text: errorMsg"></span>
+              </div>
+              <div class="form-group">
+                <button type="button" data-bind="click: join" class="btn btn-primary">Enter</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+
               <!-- /Modal Form -->
             </div>
             <!-- /Modal Body -->
