@@ -50,7 +50,7 @@
       </nav>
       <!-- /navigation bar-->
     </header>
-    <div id="landing-page-sections">
+    <section id="landing-page-sections">
       <!-- first section - Home -->
       <div id="home" class="home">
         <div class="text-vcenter" id="greetMsg">
@@ -130,7 +130,7 @@
         </div>
       </div>
       <!-- /fourth section -->
-    </div>
+    </section>
 
 
     <main>
@@ -262,9 +262,9 @@
                 </div>
               </div><!--end of chat template-->
               <div class="panel-footer">
-                <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-                <button class="btn" data-bind="click: send">Send</button>
-                <button class="btn" data-bind="click: clear">Clear</button>
+                <input type="text" class="form-control chat-input" data-bind="textInput: msgInput, event: {keypress: onEnterKey }" placeholder="Enter your text here...">
+                <button class="btn btn-primary" data-bind="click: send">Send</button>
+                <button class="btn btn-primary" data-bind="click: clear">Clear</button>
               </div>
             </div>
           </div> <!-- Right column -->
