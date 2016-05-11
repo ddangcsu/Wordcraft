@@ -203,27 +203,25 @@
                   <!--Game Result-->
                   <div data-bind="if: GameResults.display">
                     <div data-bind="with: GameResults">
-                        <h4> Game Result </h4>
-                        <span data-bind="foreach: playersResults">
-                                <div class="col-sm-4 margin40">
-                                    <div class="item-img-wrap ">
-                                        <img data-bind="css: avatar">
-                                    </div>
-                                    <div class="result-page">
-                                        <h3 data-bind="text: name"></h3>
-                                        <span>Current Score: </span>
-                                        <h4 data-bind="text: score"></h4>
-                                        <span>Total Score: </span>
-                                        <h4 data-bind="text: totalScore"></h4>
-                                        <span>Word List: </span>
-                                        <p data-bind="text: wordList"></p>
-                                    </div>
-                                </div>
-                        </span>
-                      <!-- TODO: Data bind for Game Result -->
-                      <!-- Add data bind for the result in here similar to the above-->
+                      <h4> Game Result </h4>
+                      <span data-bind="foreach: playersResults">
+                        <div class="col-sm-4 margin40">
+                          <div class="item-img-wrap ">
+                            <img data-bind="css: avatar">
+                          </div>
+                          <div class="result-page">
+                            <h3 data-bind="text: name"></h3>
+                            <span>Current Score: </span>
+                            <h4 data-bind="text: score"></h4>
+                            <span>Total Score: </span>
+                            <h4 data-bind="text: totalScore"></h4>
+                            <span>Word List: </span>
+                            <p data-bind="text: wordList"></p>
+                          </div>
+                        </div>
+                      </span>
                     </div>
-                </div><!--End of Game Result-->
+                  </div><!--End of Game Result-->
                 </div>
               </div>
               <div class="panel-footer text-center" data-bind="if: GameTimer.display">
@@ -246,21 +244,21 @@
               <!--chat template-->
               <div id="demo-chat-body" class="collapse in">
                 <div class="nano has-scrollbar" style="height:380px">
-                    <div class="nano-content pad-all" tabindex="0" style="right: -17px;">
-                        <ul class="list-unstyled media-block">
-                            <!-- KO dynamic bind for the chatroom -->
-                            <div class="panel-body chatroom-body" data-bind="foreach: messages">
-          						<li class="mar-btm">
-          							<div class="media-body pad-hor">
-          								<div class="speech">
-          									<a class="media-heading">Player</a><!--TODO: need to display players name-->
-          									<p data-bind="text: message, css: type"></p>
-          								</div>
-          							</div>
-          						</li>
-                            </div>
-                        </ul>
-                    </div>
+                  <div class="nano-content pad-all" tabindex="0" style="right: -17px;">
+                    <ul class="list-unstyled media-block">
+                    <!-- KO dynamic bind for the chatroom -->
+                      <div class="panel-body chatroom-body" data-bind="foreach: messages">
+          						  <li class="mar-btm">
+          							  <div class="media-body pad-hor">
+          								  <div class="speech">
+          								    <a data-bind="text: message_from" class="media-heading"></a>
+          									  <p data-bind="text: message, css: type"></p>
+          								 </div>
+          						  	</div>
+          						  </li>
+                      </div>
+                    </ul>
+                  </div>
                 </div>
               </div><!--end of chat template-->
               <div class="panel-footer">

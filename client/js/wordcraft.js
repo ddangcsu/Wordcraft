@@ -138,7 +138,8 @@ var main = function () {
     WC.Model.Message = function (msg) {
         return {
             type: msg.type + "-msg",
-            message: msg.from + " " + msg.to + ": " + msg.msg,
+            message: msg.to + msg.msg,
+            message_from: msg.from,
         };
     };
 
