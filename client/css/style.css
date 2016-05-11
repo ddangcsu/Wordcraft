@@ -7,6 +7,12 @@ body {
     color:red;
 }
 
+.pannel-title {
+    color:darkgreen;
+    font-weight: bold;
+    text-align: center;
+}
+
 .self {
     font-weight: bold;
     color: orange;
@@ -63,6 +69,7 @@ body {
   background: #FFF;
   border-top: none;
   position: relative;
+  text-align: center;
 }
 .result-page h3 {
   margin: 10px;
