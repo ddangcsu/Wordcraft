@@ -297,7 +297,7 @@
               <div class="form-group">
                 <label for="inputName">Enter your game name:</label>
                 <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"
-                  data-bind="textInput: newName" name="username" placeholder="PlayerName">
+                  data-bind="textInput: newName, event: {keypress: onEnterKey}" name="username" placeholder="PlayerName">
               </div>
               <div class="form-group error" data-bind="if: hasError">
                 <span data-bind="text: errorMsg"></span>

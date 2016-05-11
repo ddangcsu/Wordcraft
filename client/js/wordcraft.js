@@ -112,14 +112,17 @@ var main = function () {
             }
             return false;
         },
+
+        // add enter key binding
+        onEnterKey: function (data, event) {
+            var self = this;
+            if (event.keyCode === 13) {
+                self.join();
+                return false;
+            }
+            return true;
+        },
     };
-
-    // // Add a computed variable to randomly pick one of the 27 avatars
-    // WC.Model.NewPlayerName.avatar = ko.computed(function () {
-    //     var rand = _.random(1,27);
-    //     return ("wc-avatar wc-avatar-" + rand);
-    // }, WC.Model.NewPlayerName);
-
 
     // Define a GameRoom Model that contain an array of observable Players
     WC.Model.GameRoom = {
