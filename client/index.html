@@ -140,8 +140,6 @@
           <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="container-fluid" data-bind="foreach: players">
               <div class="thumbnail">
-                <!-- TODO: Add static avatar for now -->
-                <!--<span class="wc-avatar wc-avatar-5"></span>-->
                 <span data-bind="css: avatar"></span>
                 <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
               </div>
@@ -159,11 +157,9 @@
                 <h4 class="pannel-title">Word List</h4>
               </div>
               <div class="panel-body gameboard-body">
-                <div class="row">
-                    <ul data-bind="foreach: words">
-                        <p data-bind="text: word"></p>
-                    </ul>
-                </div>
+                <ul data-bind="foreach: words">
+                  <li data-bind="text: word"></li>
+                </ul>
               </div>
               <div class="panel-footer">
               </div>
@@ -204,10 +200,10 @@
                   <div data-bind="if: GameResults.display">
                     <div data-bind="with: GameResults">
                       <h4> Game Result </h4>
-                      <span data-bind="foreach: playersResults">
+                      <div data-bind="foreach: playersResults">
                         <div class="col-sm-4 margin40">
                           <div class="item-img-wrap ">
-                            <img data-bind="css: avatar">
+                            <span data-bind="css: avatar"></span>
                           </div>
                           <div class="result-page">
                             <h3 data-bind="text: name"></h3>
@@ -219,7 +215,7 @@
                             <p data-bind="text: wordList"></p>
                           </div>
                         </div>
-                      </span>
+                      </div>
                     </div>
                   </div><!--End of Game Result-->
                 </div>
@@ -248,14 +244,14 @@
                     <ul class="list-unstyled media-block">
                     <!-- KO dynamic bind for the chatroom -->
                       <div class="panel-body chatroom-body" data-bind="foreach: messages">
-          						  <li class="mar-btm">
-          							  <div class="media-body pad-hor">
-          								  <div class="speech">
-          								    <a data-bind="text: message_from" class="media-heading"></a>
-          									  <p data-bind="text: message, css: type"></p>
-          								 </div>
-          						  	</div>
-          						  </li>
+                        <li class="mar-btm">
+                          <div class="media-body pad-hor">
+                            <div class="speech">
+                              <a data-bind="text: message_from" class="media-heading"></a>
+                              <p data-bind="text: message, css: type"></p>
+                            </div>
+                          </div>
+                        </li>
                       </div>
                     </ul>
                   </div>
@@ -297,7 +293,7 @@
               <div class="form-group">
                 <label for="inputName">Enter your game name:</label>
                 <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"
-                  data-bind="textInput: newName, event: {keypress: onEnterKey}" name="username" placeholder="PlayerName">
+                  data-bind="textInput: newName, event: {keypress: onEnterKey}" name="username">
               </div>
               <div class="form-group error" data-bind="if: hasError">
                 <span data-bind="text: errorMsg"></span>
