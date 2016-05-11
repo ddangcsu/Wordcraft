@@ -90,22 +90,24 @@ var main = function () {
         addWord: function () {
             var self = this;
             var wordInput = self.wordInput().toLowerCase();
-            if (wordInput !== "") {
+            // Check if the word exists in the array
+            var dupWord = _.some(self.words(), function (word) {
+                return word.word === wordInput;
+            });
 
+            if (wordInput !== "" && !dupWord) {
                 // Check validity and add to words list
+                // Change code to reduce server latency to check duplicate words
                 $.get("dict/" + wordInput, function(result) {
                     if (result.valid) {
-                        // Check if the word exists in the array
-                        if (!_.some(self.words(), function (word) {return word.word === wordInput})) {
-                            self.words.push({ word: wordInput });
-                        }
+                        self.words.push({ word: wordInput });
                     }
                 });
-
-                // Clear the word input box
-                self.wordInput("");
             }
+            // Clear the word input box
+            self.wordInput("");
         },
+
         // Add word when enter key is pressed
         onKeyPress: function (data, event) {
             var self = this;
@@ -127,9 +129,10 @@ var main = function () {
         // Reset the word list after sending to server
         resetList: function () {
             var self = this;
-            while(self.words().length > 0) {
-                self.words().pop();
-            }
+            // while(self.words().length > 0) {
+            //     self.words().pop();
+            // }
+            self.words([]);
             self.wordInput("");
         }
     };
