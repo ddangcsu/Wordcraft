@@ -34,14 +34,14 @@ var main = function () {
         "wc-avatar wc-avatar-24",
         "wc-avatar wc-avatar-25",
         "wc-avatar wc-avatar-26",
-        "wc-avatar wc-avatar-27",
+        "wc-avatar wc-avatar-27"
     ];
 
     // WordCraft namespace
     var WC = {
         // Define the User Interface jQuery selector for each DOM section
         UI: {
-            chatRoom: $(".chatroom-body"),
+            chatRoom: $(".chatroom-body")
         },
         // Define holder for Func functions
         Controller: {},
@@ -51,8 +51,7 @@ var main = function () {
     };
 
     // Socket IO information
-    var client,
-        connected = false;
+    var client;
 
     // Define a function to create a single KO Player Model
     WC.Model.Player = function (player) {
@@ -64,7 +63,7 @@ var main = function () {
             avatar: player.avatar,
             name: player.name,
             id: player.id,
-            self: ("/#" + client.id === player.id) ? true: false,
+            self: (("/#" + client.id) === player.id)? true : false
         };
     };
 
@@ -83,14 +82,12 @@ var main = function () {
                 self.hasError(true);
                 self.errorMsg("Name required");
                 console.log("Name required");
-                return true;
             } else {
                 url = "/checkName/" + self.newName();
                 console.log("Game Name: " + self.newName());
 
                 // Check if the name is a good unique name
-                $.get(url)
-                .done(function (result) {
+                $.get(url).done(function (result) {
                     // Name is good start the game.
                     if (result.hasOwnProperty("isUnique")) {
                         if (result.isUnique === true) {
@@ -110,7 +107,7 @@ var main = function () {
                     return true;
                 });
             }
-            return false;
+            return true;
         },
 
         // add enter key binding
@@ -121,7 +118,7 @@ var main = function () {
                 return false;
             }
             return true;
-        },
+        }
     };
 
     // Define a GameRoom Model that contain an array of observable Players
@@ -133,7 +130,7 @@ var main = function () {
         // player is an object of name, id
         add: function (player) {
             var self = this;
-            self.players.push(WC.Model.Player(player));
+            self.players.push(new WC.Model.Player(player));
         },
         // Function to update the Game Room with a list of players
         update: function (players) {
@@ -141,7 +138,7 @@ var main = function () {
             // Compute to get only new players the server sent
             var diff = _.differenceBy(players, self.players(), "id");
             // Loop through the players to to the Player Join list
-            _.each(diff, function(player) {
+            _.each(diff, function (player) {
                 self.add(player);
             });
         },
@@ -173,9 +170,11 @@ var main = function () {
             if (wordInput !== "" && !dupWord) {
                 // Check validity and add to words list
                 // Change code to reduce server latency to check duplicate words
-                $.get("dict/" + wordInput, function(result) {
+                $.get("dict/" + wordInput, function (result) {
                     if (result.valid) {
-                        self.words.push({ word: wordInput });
+                        self.words.push({
+                            word: wordInput
+                        });
                     }
                 });
             }
@@ -190,7 +189,7 @@ var main = function () {
             var eventKey = String.fromCharCode(event.keyCode).toUpperCase();
 
             // If eventKey is a letter in the rawLetters array return true
-            if ( WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1 ) {
+            if (WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1) {
                 return true;
             }
 
@@ -216,8 +215,8 @@ var main = function () {
     WC.Model.Message = function (msg) {
         return {
             type: msg.type + "-msg",
-            message: msg.to +" "+ msg.msg,
-            message_from: msg.from,
+            message: msg.to + " " + msg.msg,
+            message_from: msg.from
         };
     };
 
@@ -229,7 +228,7 @@ var main = function () {
         // Function to add a message into the messages array
         add: function (msg) {
             var self = this;
-            self.messages.push(WC.Model.Message(msg));
+            self.messages.push(new WC.Model.Message(msg));
         },
 
         // Send chat method
@@ -255,8 +254,6 @@ var main = function () {
                         chatPayload.msg = self.msgInput().slice(msgPos);
                     } else {
                         console.log("Invalid whisper message.");
-                        // TODO: Need to put a message into chat window to show
-                        // the invalid whisper
                         self.msgInput("");
                         return;
                     }
@@ -319,7 +316,7 @@ var main = function () {
     // Define a model for the countDown timer
     WC.Model.CountDown = {
         display: ko.observable(false),
-        value: ko.observable(),
+        value: ko.observable()
     };
 
     // Define two KO computable to show the tenth and the digit
@@ -338,7 +335,7 @@ var main = function () {
     // Define a model for the Game Timer
     WC.Model.GameTimer = {
         display: ko.observable(false),
-        value: ko.observable(),
+        value: ko.observable()
     };
     // Define two KO computable to show the tenth and the digit
     WC.Model.GameTimer.tenth = ko.computed(function () {
@@ -357,7 +354,7 @@ var main = function () {
     WC.Model.GameLetters = {
         display: ko.observable(false),
         rawLetters: ko.observableArray(),
-        letters: ko.observableArray(),
+        letters: ko.observableArray()
     };
     //Define a modal for game result
     WC.Model.GameResults = {
@@ -365,7 +362,7 @@ var main = function () {
         display: ko.observable(false),
         setArray: function (resultsArray) {
             var self = this;
-            resultsArray.forEach(function (result){
+            resultsArray.forEach(function (result) {
                 self.playersResults.push(result);
                 //sort palyer scores
                 _.sortBy(self.playersResults, "result");
@@ -375,8 +372,6 @@ var main = function () {
 
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
-        // Flip the flag to true
-        connected = true;
         console.log("Client connected to server");
         console.dir(client);
         //client.name = "player" + new Date().getSeconds();
@@ -393,7 +388,11 @@ var main = function () {
         client.emit("hello", newPayload);
 
         // Add self so that it show up as first player on the list
-        WC.Model.GameRoom.add({avatar: client.avatar, name: client.name, id: "/#" + client.id});
+        WC.Model.GameRoom.add({
+            avatar: client.avatar,
+            name: client.name,
+            id: "/#" + client.id
+        });
     };
 
     // Function to display the chat message (need to convert to KO)
@@ -416,7 +415,7 @@ var main = function () {
     // Payload for players should be a single player that left the game
     WC.Controller.playerLeft = function (data) {
         // Remove the player from playerList
-        _.each(data.players, function(player) {
+        _.each(data.players, function (player) {
             WC.Model.GameRoom.remove(player);
         });
     };
@@ -470,10 +469,9 @@ var main = function () {
 
         // Format the letter into a CSS class for the Letter Sprite
         _.each(data.letters, function (letter) {
-            var letterObj = {
-                letter: "letter-lg wc-lg-" + letter,
-            };
-            WC.Model.GameLetters.letters.push(letterObj);
+            WC.Model.GameLetters.letters.push({
+                letter: "letter-lg wc-lg-" + letter
+            });
         });
 
         console.log("displayGameLetters:");
@@ -486,7 +484,7 @@ var main = function () {
         // Code to get the list of valid words generated by the player
         // and emit it to a client
         var words = [];
-        WC.Model.WordList.words().forEach(function(entry) {
+        WC.Model.WordList.words().forEach(function (entry) {
             words.push(entry.word);
         });
         console.log(words);
@@ -500,7 +498,6 @@ var main = function () {
     WC.Controller.displayGameScores = function (payload) {
         WC.Model.GameResults.display(true);
         WC.Model.GameResults.setArray(payload);
-        // TODO: Code to display game scores from payload
         // Payload is an array of player objects in the form of:
         // {name, score, wordListArray}
         // Score are shorted with highest to lowest
@@ -512,7 +509,11 @@ var main = function () {
     WC.Controller.handleGameInProgress = function () {
         // Display the modal tell player they can't come in while game in progress
         $("#inProgressModal").modal("show");
-        WC.Model.GameRoom.remove({avatar: client.avatar, name: client.name, id: "/#" + client.id});
+        WC.Model.GameRoom.remove({
+            avatar: client.avatar,
+            name: client.name,
+            id: "/#" + client.id
+        });
         return false;
     };
 
@@ -526,7 +527,6 @@ var main = function () {
 
         // Handle disconnect event when the server disconnect the client
         client.on("disconnect", function () {
-            connected = false;
             console.log("Client disconnected");
             // Close the connection to prevent continous retry of connection
             client.close();
