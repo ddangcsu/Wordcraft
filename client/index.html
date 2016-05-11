@@ -53,7 +53,7 @@
     <section id="landing-page-sections">
       <!-- first section - Home -->
       <div id="home" class="home">
-        <div class="text-vcenter" id="greetMsg">
+        <div class="text-vcenter">
           <h1>Hello Players</h1>
           <h2>Welcome to WordCraft</h2>
         </div>
@@ -104,7 +104,7 @@
                 <div class="panel-body lead" id="customSteps">
                   <ul>
                     <li>Go to Want to Play section</li>
-                    <li>Give your name and enter GameRoom </li>
+                    <li>Enter GameRoom with a name</li>
                     <li>To start the game type /ready in chat room</li>
                     <li>5 Seconds count down will be displayed</li>
                     <li>Start entering your words in the input box</li>
@@ -199,7 +199,7 @@
                   <!--Game Result-->
                   <div data-bind="if: GameResults.display">
                     <div data-bind="with: GameResults">
-                      <h4> Game Result </h4>
+                      <h4> Game Results </h4>
                       <div data-bind="foreach: playersResults">
                         <div class="col-sm-4 margin40">
                           <div class="item-img-wrap ">
@@ -291,7 +291,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="inputName">Enter your game name:</label>
+                <label for="inputName">Enter your game name</label>
                 <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"
                   data-bind="textInput: newName, event: {keypress: onEnterKey}" name="username">
               </div>
@@ -338,7 +338,7 @@
     <footer>
      <!-- <hr />-->
       <div class="container">
-        <p class="text-right">Copyright &copy; CPSC473 GameTeam 2016</p>
+        <p class="text-right">Copyright &copy; CPSC473 WordCraft GameTeam 2016</p>
       </div>
     </footer>
     <!-- /footer -->

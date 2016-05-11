@@ -9,16 +9,6 @@ html, body {
   padding: 50px 0;
 }
 
-#customNavBar {
-  color:red;
-}
-
-#greetMsg {
-  color:white;
-  font-size: 1.5em;
-  padding-bottom:2%;
-}
-
 .pad-section img {
   width: 400px;
   height:300px;
@@ -29,6 +19,9 @@ html, body {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+  color:white;
+  font-size: 1.5em;
+  padding-bottom:2%;
 }
 
 .text-vcenter h1 {
@@ -40,8 +33,9 @@ html, body {
  
 /* additional sections */
 
-#home {
-  padding-top:150px;
+.home {
+  padding-top:200px;
+  padding-bottom: 200px;
   background: url(../assets/original.jpg) no-repeat center center fixed;
   display: table;
   height: 100%;
@@ -53,21 +47,22 @@ html, body {
   background-size: cover;
 }
 
-#aboutGameTitle{
+#aboutGameTitle {
   padding-top:10%;
   color:brown;
   font-size:x-large;
   font-weight:bold;
 } 
 
-#aboutGame .lead{
+.lead {
   padding-top:5%;
   color:brown;
   padding-bottom:10%;
-  
 }
+
 #gameRules {
   padding-top:20%;
+  padding-bottom:30%;
   background: url(../assets/original.jpg) no-repeat center center fixed;
   display: table;
   height: 800px;
@@ -79,7 +74,7 @@ html, body {
   background-size: cover;
 }
 
-#gameRules .panel-title{
+.panel-title{
   font-size:x-large;
   text-align:center;
   color:darkgreen;
@@ -92,26 +87,27 @@ html, body {
   font-weight:bold;
 }
 
-#gameRules .panel {
+.panel {
   opacity: 0.85;
-}
-
-#gameMsg{
-  color:white;
-  padding-bottom:10px;
-  font-size:large;
 }
 
 #playButton{
   background-color: #306d9f;
   color:white;
+  font-weight:bold;
 }
 
-#modalTitle{
-  color:darkblue;
+.modal-title {
+  color: darkgreen;
+  font-weight: bold;
+  text-align: left;
+}
+
+.modal-body .form-group error {
+  color: red;
 }
 
 footer {
   padding: 20px 0;
+  font-style: italic;
 }
-
