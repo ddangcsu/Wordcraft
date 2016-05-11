@@ -350,8 +350,8 @@ var initServerIO = function (server, mongo, redis) {
 
                 // Craft the payload for client
                 newPayload.type = payload.type;
-                newPayload.from = "Whisper from";
-                newPayload.to = payload.from;
+                newPayload.from = "Whisper from " + payload.from;
+                newPayload.to = "";
                 newPayload.msg = payload.msg;
 
                 console.log("Forward private message to " + sendTo);
