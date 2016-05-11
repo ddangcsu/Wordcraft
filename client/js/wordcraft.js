@@ -234,12 +234,18 @@ var main = function () {
         // Send chat method
         send: function () {
             var self = this;
-            if (self.msgInput() !== "") {
+            if (self.msgInput().trim() !== "") {
                 var chatPayload = {};
-                var cmd = self.msgInput().split(" ");
+                var cmd = self.msgInput().trim().split(" ");
 
                 // Determine if chat is of type Whisper
                 if (cmd[0].toUpperCase() === "/W") {
+                    // Return when empty whisper message
+                    if (cmd.length <= 2) {
+                        console.log("Invalid or empty whisper");
+                        self.msgInput("");
+                        return;
+                    }
                     // Check if sending to a valid player
                     var toPlayer = _.find(WC.Model.GameRoom.players(), function (player) {
                         return (player.name.toLowerCase() === cmd[1].toLowerCase());
@@ -294,6 +300,7 @@ var main = function () {
                 // Tell Controller to display the message
                 WC.Controller.displayMessage(chatPayload);
             }
+            self.msgInput("");
             return false;
         },
 
