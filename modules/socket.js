@@ -7,6 +7,9 @@ var Promise = require("bluebird");
 var io = require("socket.io")();
 var _ = require("lodash");
 
+// Hack to stop game when all players quit
+var stopGame = false;
+
 var mClient;
 var rClient;
 
@@ -17,9 +20,13 @@ var gameSentResult = "wc.sentResult";
 // Private function to emit an ioEvent with a count down seconds
 var sendTimer = function (ioEvent, seconds) {
     // Return a promise to do things when the countdown completed
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
         var timer = seconds;
         var countdown = setInterval(function () {
+            if (stopGame) {
+                clearInterval(countdown);
+                reject(new Error("Stop Game.  No more player in game"));
+            }
             // the ioEvent i.e. countdown
             io.emit(ioEvent, {"timer": timer});
             console.log(ioEvent + " : " + timer);
@@ -34,7 +41,7 @@ var sendTimer = function (ioEvent, seconds) {
 
 // Private function to send up the letters
 var sendLetters = function (ioEvent) {
-    //TODO: as for now, randomly output 10 letters
+    //randomly output 10 letters
     var vowels = "AEIOU";
     var consonants = "BCDFGHJKLMNPQRSTVWXYZ";
 
@@ -42,9 +49,13 @@ var sendLetters = function (ioEvent) {
     var letters = _.shuffle(random.split(""));
 
     // Return a promise to do things when send Letters completed
-    return new Promise(function (resolve) {
-        io.emit(ioEvent, {"letters":letters});
-        resolve(letters);
+    return new Promise(function (resolve, reject) {
+        if (stopGame) {
+            reject(new Error("Stop Game.  No more player in game"));
+        } else {
+            io.emit(ioEvent, {"letters":letters});
+            resolve(letters);
+        }
     });
 };
 
@@ -113,6 +124,11 @@ var handleGameStart = function () {
             console.log("Total players: " + userCount);
             console.log("Total ready: " + readyCount);
 
+            if (userCount === 0) {
+                stopGame = true;
+            } else {
+                stopGame = false;
+            }
             // Call GameStart();
             if (userCount === readyCount) {
                 var countDownTime = 5;
@@ -197,6 +213,12 @@ var handleGameResult = function () {
 
             console.log("Total players: " + userCount);
             console.log("Total results: " + resultCount);
+
+            if (userCount === 0) {
+                stopGame = true;
+            } else {
+                stopGame = false;
+            }
 
             // Send up the game result
             if (userCount === resultCount) {
