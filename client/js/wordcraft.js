@@ -186,13 +186,18 @@ var main = function () {
         onKeyPress: function (data, event) {
             var self = this;
             // Convert the event keyCode to letter
-            var eventKey = String.fromCharCode(event.keyCode).toUpperCase();
+            // use event.charCode instead of event.keyCode to fix firefox issue
+            var eventKey = String.fromCharCode(event.charCode).toUpperCase();
 
             // If eventKey is a letter in the rawLetters array return true
             if (WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1) {
                 return true;
             }
 
+            // Fix firefox backspace issue
+            if (event.keyCode === 8) {
+                return true;
+            }
             // If the enter key was pressed, addWord
             if (event.keyCode === 13) {
                 self.addWord();
