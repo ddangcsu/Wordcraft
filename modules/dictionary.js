@@ -9,7 +9,6 @@ var fs = Promise.promisifyAll(require("fs"));
 var router = require("express").Router();
 
 // Declare redis key to store dictionary for game
-// var key = "gamedict";
 var client;
 var key = "wc.dictionary";
 var dictFile;

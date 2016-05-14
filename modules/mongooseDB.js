@@ -16,21 +16,6 @@ mongoose.connection.once("open", function () {
     console.log("Database open successfully for DB:" + dbName);
 });
 
-// This is our mongoose model for todos
-var PlayerSchema = mongoose.Schema({
-    username: {
-        type: String,
-        unique: true,
-        require: true
-    },
-    password: {
-        type: String,
-        require: true
-    },
-    highScore: Number,
-    gamesPlayed: Number
-});
-
 var GameSchema = mongoose.Schema({
     // The following stuff are updated per session that the player play
     avatar: String,
@@ -51,8 +36,6 @@ var GameSchema = mongoose.Schema({
     wordList: [ String ]
 });
 
-var Player = mongoose.model("Player", PlayerSchema);
 var Game = mongoose.model("Game", GameSchema);
 
-module.exports.Player = Player;
 module.exports.Game = Game;

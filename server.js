@@ -4,8 +4,6 @@
 
 "use strict";
 
-// var Promise = require("bluebird");
-
 // Create an express application
 var express = require("express");
 var app = express();

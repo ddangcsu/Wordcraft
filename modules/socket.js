@@ -473,7 +473,6 @@ var initServerIO = function (server, mongo, redis) {
 
         // Handle event game results.  Expect payload as an array of words
         socket.on("game result", function (payload) {
-            // TODO: Code need here to:
             // 1.  Compute the score according to each player payload
             // 2.  Store the word lists and the score of each player
             // 3.  When server received all result from all players
