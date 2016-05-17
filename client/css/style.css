@@ -64,14 +64,14 @@ body {
   overflow: hidden;
 }
 .result-page {
-  width: 100%;
+  /*width: 100%;*/
   padding: 10px 10px;
   background: #FFF;
   border-top: none;
   position: relative;
   text-align: center;
 }
-.result-page h3 {
+.result-page .result-h3 {
   margin: 10px;
   padding: 0;
   font-size: 18px;
@@ -79,7 +79,7 @@ body {
   text-align: center;
   text-transform: uppercase;
 }
-.result-page h4 {
+.result-page .result-h4 {
   margin: 10px;
   padding: 0;
   font-size: 16px;
@@ -146,6 +146,7 @@ body {
     font-size: 1.2em;
     color: #23535c;
     display: block;
+    border-bottom: 1px solid gray;
     border-bottom: 1px solid rgba(0,0,0,0.1);
     margin-bottom: 5px;
 

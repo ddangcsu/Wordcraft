@@ -25,7 +25,7 @@
   <body>
     <header>
       <!-- navigation bar -->
-      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid" id="customNavBar">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -141,7 +141,7 @@
             <div class="container-fluid" data-bind="foreach: players">
               <div class="thumbnail">
                 <span data-bind="css: avatar"></span>
-                <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
+                <p class="h5" data-bind="text: name, attr: {userId: id}, css: {self: self}"></p>
               </div>
             </div>
           </div>
@@ -206,11 +206,11 @@
                             <span data-bind="css: avatar"></span>
                           </div>
                           <div class="result-page">
-                            <h3 data-bind="text: name"></h3>
+                            <p class="result-h3" data-bind="text: name"></p>
                             <span>Current Score: </span>
-                            <h4 data-bind="text: score"></h4>
+                            <p class="result-h4" data-bind="text: score"></p>
                             <span>Total Score: </span>
-                            <h4 data-bind="text: totalScore"></h4>
+                            <p class="result-h4" data-bind="text: totalScore"></p>
                             <span>Word List: </span>
                             <p data-bind="text: wordList"></p>
                           </div>
@@ -238,25 +238,24 @@
                 <h4 class="pannel-title">Chat Room</h4>
               </div>
               <!--chat template-->
-              <div id="demo-chat-body" class="collapse in">
-                <div class="nano has-scrollbar" style="height:380px">
-                  <div class="nano-content pad-all" tabindex="0" style="right: -17px;">
-                    <ul class="list-unstyled media-block">
-                    <!-- KO dynamic bind for the chatroom -->
-                      <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                        <li class="mar-btm">
-                          <div class="media-body pad-hor">
-                            <div class="speech">
-                              <a data-bind="text: message_from" class="media-heading"></a>
-                              <p data-bind="text: message, css: type"></p>
-                            </div>
+              <div id="demo-chat-body" class="panel-body chatroom-body collapse in">
+                <div class="nano-content pad-all">
+                  <div class="list-unstyled media-block">
+                  <!-- KO dynamic bind for the chatroom -->
+                    <div data-bind="foreach: messages">
+                      <div class="mar-btm">
+                        <div class="media-body pad-hor">
+                          <div class="speech">
+                            <p data-bind="text: message_from" class="media-heading"></p>
+                            <p data-bind="text: message, css: type"></p>
                           </div>
-                        </li>
+                        </div>
                       </div>
-                    </ul>
+                    </div>
                   </div>
                 </div>
               </div><!--end of chat template-->
+
               <div class="panel-footer">
                 <input type="text" class="form-control chat-input" data-bind="textInput: msgInput, event: {keypress: onEnterKey }" placeholder="Enter your text here...">
                 <button class="btn btn-primary" data-bind="click: send">Send</button>
